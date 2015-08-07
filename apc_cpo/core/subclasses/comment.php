@@ -1,17 +1,17 @@
 <?php
-require_once 'attendance_dd.php';
-class attendance extends data_abstraction
+require_once 'comment_dd.php';
+class comment extends data_abstraction
 {
     var $fields = array();
 
 
-    function attendance()
+    function comment()
     {
-        $this->fields     = attendance_dd::load_dictionary();
-        $this->relations  = attendance_dd::load_relationships();
-        $this->subclasses = attendance_dd::load_subclass_info();
-        $this->table_name = attendance_dd::$table_name;
-        $this->tables     = attendance_dd::$table_name;
+        $this->fields     = comment_dd::load_dictionary();
+        $this->relations  = comment_dd::load_relationships();
+        $this->subclasses = comment_dd::load_subclass_info();
+        $this->table_name = comment_dd::$table_name;
+        $this->tables     = comment_dd::$table_name;
     }
 
     function add($param)
@@ -21,15 +21,14 @@ class attendance extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('INSERT');
-            $this->set_fields('id, date, time_in, time_out, hr_head');
-            $this->set_values("?,?,?,?,?");
+            $this->set_fields('id, body, date, post_id');
+            $this->set_values("?,?,?,?");
 
-            $bind_params = array('issss',
+            $bind_params = array('issi',
                                  &$this->fields['id']['value'],
+                                 &$this->fields['body']['value'],
                                  &$this->fields['date']['value'],
-                                 &$this->fields['time_in']['value'],
-                                 &$this->fields['time_out']['value'],
-                                 &$this->fields['hr_head']['value']);
+                                 &$this->fields['post_id']['value']);
 
             $this->stmt_prepare($bind_params);
         }
@@ -45,14 +44,13 @@ class attendance extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('UPDATE');
-            $this->set_update("date = ?, time_in = ?, time_out = ?, hr_head = ?");
+            $this->set_update("body = ?, date = ?, post_id = ?");
             $this->set_where("id = ?");
 
-            $bind_params = array('ssssi',
+            $bind_params = array('ssii',
+                                 &$this->fields['body']['value'],
                                  &$this->fields['date']['value'],
-                                 &$this->fields['time_in']['value'],
-                                 &$this->fields['time_out']['value'],
-                                 &$this->fields['hr_head']['value'],
+                                 &$this->fields['post_id']['value'],
                                  &$this->fields['id']['value']);
 
             $this->stmt_prepare($bind_params);

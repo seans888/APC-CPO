@@ -21,10 +21,10 @@ class eval_hdr extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('INSERT');
-            $this->set_fields('id, date_submit, date_eval, school_yr, date_discussed, subj, industry_prof, rcv_by, rcv_date, internship_id');
-            $this->set_values("?,?,?,?,?,?,?,?,?,?");
+            $this->set_fields('id, date_submit, date_eval, school_yr, date_discussed, subj, industry_prof, rcv_by, rcv_date');
+            $this->set_values("?,?,?,?,?,?,?,?,?");
 
-            $bind_params = array('issssssssi',
+            $bind_params = array('issssssss',
                                  &$this->fields['id']['value'],
                                  &$this->fields['date_submit']['value'],
                                  &$this->fields['date_eval']['value'],
@@ -33,8 +33,7 @@ class eval_hdr extends data_abstraction
                                  &$this->fields['subj']['value'],
                                  &$this->fields['industry_prof']['value'],
                                  &$this->fields['rcv_by']['value'],
-                                 &$this->fields['rcv_date']['value'],
-                                 &$this->fields['internship_id']['value']);
+                                 &$this->fields['rcv_date']['value']);
 
             $this->stmt_prepare($bind_params);
         }
@@ -50,10 +49,10 @@ class eval_hdr extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('UPDATE');
-            $this->set_update("date_submit = ?, date_eval = ?, school_yr = ?, date_discussed = ?, subj = ?, industry_prof = ?, rcv_by = ?, rcv_date = ?, internship_id = ?");
+            $this->set_update("date_submit = ?, date_eval = ?, school_yr = ?, date_discussed = ?, subj = ?, industry_prof = ?, rcv_by = ?, rcv_date = ?");
             $this->set_where("id = ?");
 
-            $bind_params = array('ssssssssii',
+            $bind_params = array('ssssssssi',
                                  &$this->fields['date_submit']['value'],
                                  &$this->fields['date_eval']['value'],
                                  &$this->fields['school_yr']['value'],
@@ -62,7 +61,6 @@ class eval_hdr extends data_abstraction
                                  &$this->fields['industry_prof']['value'],
                                  &$this->fields['rcv_by']['value'],
                                  &$this->fields['rcv_date']['value'],
-                                 &$this->fields['internship_id']['value'],
                                  &$this->fields['id']['value']);
 
             $this->stmt_prepare($bind_params);

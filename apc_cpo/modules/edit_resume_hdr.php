@@ -53,22 +53,6 @@ elseif(xsrf_guard())
         {
             $dbh_resume_hdr->edit($arr_form_data);
 
-            require_once 'subclasses/resume_dtl.php';
-            $dbh_resume_hdr = new resume_dtl;
-            $dbh_resume_hdr->del($arr_form_data);
-
-            for($a=0; $a<$resume_dtl_count;$a++)
-            {
-                
-                $param = array(
-                               'id'=>$cf_resume_dtl_id[$a],
-                               'response'=>$cf_resume_dtl_response[$a],
-                               'resume_hdr_id'=>$id,
-                               'questionnaire_id'=>$cf_resume_dtl_questionnaire_id[$a]
-                              );
-                $dbh_resume_hdr->add($param);
-            }
-
 
             redirect("listview_resume_hdr.php?$query_string");
         }

@@ -11,10 +11,10 @@ class resume_dtl_dd
                                               'nullable'=>FALSE,
                                               'data_type'=>'integer',
                                               'length'=>11,
-                                              'required'=>TRUE,
+                                              'required'=>FALSE,
                                               'attribute'=>'primary key',
                                               'control_type'=>'none',
-                                              'size'=>60,
+                                              'size'=>0,
                                               'upload_path'=>'',
                                               'drop_down_has_blank'=>TRUE,
                                               'label'=>'ID',
@@ -68,7 +68,7 @@ class resume_dtl_dd
                                               'data_type'=>'integer',
                                               'length'=>11,
                                               'required'=>TRUE,
-                                              'attribute'=>'foreign key',
+                                              'attribute'=>'',
                                               'control_type'=>'textbox',
                                               'size'=>60,
                                               'upload_path'=>'',
@@ -125,13 +125,7 @@ class resume_dtl_dd
 
     static function load_relationships()
     {
-        $relations = array(array('type'=>'M-1',
-                                 'table'=>'resume_hdr',
-                                 'alias'=>'resume_hdr_id',
-                                 'link_parent'=>'id',
-                                 'link_child'=>'resume_hdr_id',
-                                 'minimum'=>1,
-                                 'where_clause'=>''));
+        $relations = array();
 
         return $relations;
     }

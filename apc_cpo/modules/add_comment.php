@@ -6,7 +6,7 @@
 //Cobalt on the web: http://cobalt.jvroig.com
 //******************************************************************
 require 'path.php';
-init_cobalt('Add resume hdr');
+init_cobalt('Add comment');
 
 require 'components/get_listview_referrer.php';
 
@@ -15,27 +15,27 @@ if(xsrf_guard())
     init_var($_POST['btn_cancel']);
     init_var($_POST['btn_submit']);
     require 'components/query_string_standard.php';
-    require 'subclasses/resume_hdr.php';
-    $dbh_resume_hdr = new resume_hdr;
+    require 'subclasses/comment.php';
+    $dbh_comment = new comment;
 
-    $object_name = 'dbh_resume_hdr';
+    $object_name = 'dbh_comment';
     require 'components/create_form_data.php';
     extract($arr_form_data);
 
     if($_POST['btn_cancel'])
     {
         log_action('Pressed cancel button', $_SERVER['PHP_SELF']);
-        redirect("listview_resume_hdr.php?$query_string");
+        redirect("listview_comment.php?$query_string");
     }
 
     if($_POST['btn_submit'])
     {
         log_action('Pressed submit button', $_SERVER['PHP_SELF']);
 
-        $message .= $dbh_resume_hdr->sanitize($arr_form_data)->lst_error;
+        $message .= $dbh_comment->sanitize($arr_form_data)->lst_error;
         extract($arr_form_data);
 
-        if($dbh_resume_hdr->check_uniqueness($arr_form_data)->is_unique)
+        if($dbh_comment->check_uniqueness($arr_form_data)->is_unique)
         {
             //Good, no duplicate in database
         }
@@ -46,16 +46,16 @@ if(xsrf_guard())
 
         if($message=="")
         {
-            $dbh_resume_hdr->add($arr_form_data);
+            $dbh_comment->add($arr_form_data);
             
 
-            redirect("listview_resume_hdr.php?$query_string");
+            redirect("listview_comment.php?$query_string");
         }
     }
 }
-require 'subclasses/resume_hdr_html.php';
-$html = new resume_hdr_html;
-$html->draw_header('Add Resume Hdr', $message, $message_type);
+require 'subclasses/comment_html.php';
+$html = new comment_html;
+$html->draw_header('Add Comment', $message, $message_type);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
 $html->draw_controls('add');
 

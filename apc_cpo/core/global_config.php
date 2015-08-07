@@ -1,6 +1,6 @@
 <?php
 define('GLOBAL_PROJECT_NAME', 'apc_cpo');
-define('GLOBAL_SESSION_NAME', 'C91192e62');
+define('GLOBAL_SESSION_NAME', 'C199ce28f');
 
 //Default database settings
 define('DEFAULT_DB_HOST','localhost');
@@ -29,4 +29,4 @@ define('MAX_PASSWORD_LENGTH', 200);
 define('MAX_FORM_KEYS',10);
 define('LISTVIEW_RESULTS_PER_PAGE',50);
 define('FOOTER_RESOURCE_USAGE', FALSE);
-define('ENABLE_SIDEBAR', FALSE);
+define('ENABLE_SIDEBAR', TRUE);

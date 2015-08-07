@@ -6,12 +6,12 @@
 //Cobalt on the web: http://cobalt.jvroig.com
 //******************************************************************
 require 'path.php';
-init_cobalt('Delete resume hdr');
+init_cobalt('Delete comment');
 
 if(isset($_GET['id']))
 {
     $id = urldecode($_GET['id']);
-    require_once 'form_data_resume_hdr.php';
+    require_once 'form_data_comment.php';
 }
 elseif(xsrf_guard())
 {
@@ -22,27 +22,27 @@ elseif(xsrf_guard())
     if($_POST['btn_cancel'])
     {
         log_action('Pressed cancel button', $_SERVER['PHP_SELF']);
-        redirect("listview_resume_hdr.php?$query_string");
+        redirect("listview_comment.php?$query_string");
     }
 
     elseif($_POST['btn_delete'])
     {
         log_action('Pressed delete button', $_SERVER['PHP_SELF']);
-        require_once 'subclasses/resume_hdr.php';
-        $dbh_resume_hdr = new resume_hdr;
+        require_once 'subclasses/comment.php';
+        $dbh_comment = new comment;
 
-        $object_name = 'dbh_resume_hdr';
+        $object_name = 'dbh_comment';
         require 'components/create_form_data.php';
 
-        $dbh_resume_hdr->del($arr_form_data);
+        $dbh_comment->del($arr_form_data);
 
 
-        redirect("listview_resume_hdr.php?$query_string");
+        redirect("listview_comment.php?$query_string");
     }
 }
-require 'subclasses/resume_hdr_html.php';
-$html = new resume_hdr_html;
-$html->draw_header('Delete Resume Hdr', $message, $message_type);
+require 'subclasses/comment_html.php';
+$html = new comment_html;
+$html->draw_header('Delete Comment', $message, $message_type);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
 
 $html->draw_hidden('id');
