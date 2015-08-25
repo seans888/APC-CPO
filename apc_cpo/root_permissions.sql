@@ -102,8 +102,4 @@ INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '133');
 INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '134');
 INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '135');
 INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '136');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '137');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '138');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '139');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '140');
 INSERT `user_passport` SELECT 'root', `link_id` FROM user_role_links WHERE role_id='1'

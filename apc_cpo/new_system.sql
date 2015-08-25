@@ -371,10 +371,6 @@ INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, 
 INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'Edit attendance', 'modules/edit_attendance.php', 'Edit Attendance','','1','No','On','form3.png');
 INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'View attendance', 'modules/listview_attendance.php', 'Attendance','','1','Yes','On','form3.png');
 INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'Delete attendance', 'modules/delete_attendance.php', 'Delete Attendance','','1','No','On','form3.png');
-INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'Add comment', 'modules/add_comment.php', 'Add Comment','','1','No','On','form3.png');
-INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'Edit comment', 'modules/edit_comment.php', 'Edit Comment','','1','No','On','form3.png');
-INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'View comment', 'modules/listview_comment.php', 'Comment','','1','Yes','On','form3.png');
-INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'Delete comment', 'modules/delete_comment.php', 'Delete Comment','','1','No','On','form3.png');
 INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'Add company', 'modules/add_company.php', 'Add Company','','1','No','On','form3.png');
 INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'Edit company', 'modules/edit_company.php', 'Edit Company','','1','No','On','form3.png');
 INSERT INTO `user_links`(link_id, name, target, descriptive_title, description, passport_group_id, show_in_tasklist, `status`, icon) VALUES(null,'View company', 'modules/listview_company.php', 'Company','','1','Yes','On','form3.png');
@@ -551,8 +547,4 @@ INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '133');
 INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '134');
 INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '135');
 INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '136');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '137');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '138');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '139');
-INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES ('1', '140');
 INSERT `user_passport` SELECT 'root', `link_id` FROM user_role_links WHERE role_id='1'

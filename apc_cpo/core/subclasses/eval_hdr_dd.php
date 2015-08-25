@@ -265,7 +265,11 @@ class eval_hdr_dd
 
     static function load_relationships()
     {
-        $relations = array();
+        $relations = array(array('type'=>'1-M',
+                                 'table'=>'eval_dtl',
+                                 'link_parent'=>'id',
+                                 'link_child'=>'eval_hdr_id',
+                                 'where_clause'=>''));
 
         return $relations;
     }

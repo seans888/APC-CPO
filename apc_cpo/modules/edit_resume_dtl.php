@@ -12,7 +12,7 @@ if(isset($_GET['id']))
 {
     $id = urldecode($_GET['id']);
     require 'form_data_resume_dtl.php';
-
+    $orig_id = $id;
 }
 elseif(xsrf_guard())
 {
@@ -24,7 +24,7 @@ elseif(xsrf_guard())
 
     $object_name = 'dbh_resume_dtl';
     require 'components/create_form_data.php';
-
+    $arr_form_data['orig_id'] = $_POST['orig_id'];
     extract($arr_form_data);
 
     if($_POST['btn_cancel'])
@@ -62,8 +62,8 @@ require 'subclasses/resume_dtl_html.php';
 $html = new resume_dtl_html;
 $html->draw_header('Edit Resume Dtl', $message, $message_type);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
-$html->draw_hidden('id');
 
+$html->draw_hidden('orig_id');
 $html->draw_controls('edit');
 
 $html->draw_footer();

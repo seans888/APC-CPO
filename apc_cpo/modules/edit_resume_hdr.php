@@ -61,7 +61,7 @@ elseif(xsrf_guard())
             {
                 
                 $param = array(
-                               'id'=>$id,
+                               'id'=>$cf_resume_dtl_id[$a],
                                'response'=>$cf_resume_dtl_response[$a],
                                'resume_hdr_id'=>$id,
                                'questionnaire_id'=>$cf_resume_dtl_questionnaire_id[$a]

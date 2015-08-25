@@ -44,14 +44,15 @@ class resume_dtl extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('UPDATE');
-            $this->set_update("response = ?, resume_hdr_id = ?, questionnaire_id = ?");
+            $this->set_update("id = ?, response = ?, resume_hdr_id = ?, questionnaire_id = ?");
             $this->set_where("id = ?");
 
-            $bind_params = array('siii',
+            $bind_params = array('isiii',
+                                 &$this->fields['id']['value'],
                                  &$this->fields['response']['value'],
                                  &$this->fields['resume_hdr_id']['value'],
                                  &$this->fields['questionnaire_id']['value'],
-                                 &$this->fields['id']['value']);
+                                 $param['orig_id']);
 
             $this->stmt_prepare($bind_params);
         }
@@ -106,13 +107,14 @@ class resume_dtl extends data_abstraction
     function check_uniqueness_for_editing($param)
     {
         $this->set_parameters($param);
-
+        //Next two lines just to get the orig_ pkey(s) from $param
+        $this->escape_arguments($param);
+        extract($param);
 
         $this->set_query_type('SELECT');
-        $this->set_where("id = ? AND (id != ?)");
+        $this->set_where("id = ? AND (id != '$orig_id')");
 
-        $bind_params = array('ii',
-                             &$this->fields['id']['value'],
+        $bind_params = array('i',
                              &$this->fields['id']['value']);
 
         $this->stmt_prepare($bind_params);

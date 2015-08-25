@@ -21,15 +21,16 @@ class resume_hdr extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('INSERT');
-            $this->set_fields('id, mobile_num, personal_email, website, picture');
-            $this->set_values("?,?,?,?,?");
+            $this->set_fields('id, mobile_num, personal_email, website, picture, student_id');
+            $this->set_values("?,?,?,?,?,?");
 
-            $bind_params = array('issss',
+            $bind_params = array('issssi',
                                  &$this->fields['id']['value'],
                                  &$this->fields['mobile_num']['value'],
                                  &$this->fields['personal_email']['value'],
                                  &$this->fields['website']['value'],
-                                 &$this->fields['picture']['value']);
+                                 &$this->fields['picture']['value'],
+                                 &$this->fields['student_id']['value']);
 
             $this->stmt_prepare($bind_params);
         }
@@ -45,14 +46,15 @@ class resume_hdr extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('UPDATE');
-            $this->set_update("mobile_num = ?, personal_email = ?, website = ?, picture = ?");
+            $this->set_update("mobile_num = ?, personal_email = ?, website = ?, picture = ?, student_id = ?");
             $this->set_where("id = ?");
 
-            $bind_params = array('ssssi',
+            $bind_params = array('ssssii',
                                  &$this->fields['mobile_num']['value'],
                                  &$this->fields['personal_email']['value'],
                                  &$this->fields['website']['value'],
                                  &$this->fields['picture']['value'],
+                                 &$this->fields['student_id']['value'],
                                  &$this->fields['id']['value']);
 
             $this->stmt_prepare($bind_params);
