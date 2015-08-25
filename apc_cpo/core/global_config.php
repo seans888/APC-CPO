@@ -1,6 +1,6 @@
 <?php
 define('GLOBAL_PROJECT_NAME', 'apc_cpo');
-define('GLOBAL_SESSION_NAME', 'C91192e62');
+define('GLOBAL_SESSION_NAME', 'C199ce28f');
 
 //Default database settings
 define('DEFAULT_DB_HOST','localhost');

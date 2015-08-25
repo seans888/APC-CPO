@@ -21,16 +21,15 @@ class attendance extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('INSERT');
-            $this->set_fields('id, date, time_in, time_out, hr_head, internship_id');
-            $this->set_values("?,?,?,?,?,?");
+            $this->set_fields('id, date, time_in, time_out, hr_head');
+            $this->set_values("?,?,?,?,?");
 
-            $bind_params = array('issssi',
+            $bind_params = array('issss',
                                  &$this->fields['id']['value'],
                                  &$this->fields['date']['value'],
                                  &$this->fields['time_in']['value'],
                                  &$this->fields['time_out']['value'],
-                                 &$this->fields['hr_head']['value'],
-                                 &$this->fields['internship_id']['value']);
+                                 &$this->fields['hr_head']['value']);
 
             $this->stmt_prepare($bind_params);
         }
@@ -46,15 +45,14 @@ class attendance extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('UPDATE');
-            $this->set_update("date = ?, time_in = ?, time_out = ?, hr_head = ?, internship_id = ?");
+            $this->set_update("date = ?, time_in = ?, time_out = ?, hr_head = ?");
             $this->set_where("id = ?");
 
-            $bind_params = array('ssssii',
+            $bind_params = array('ssssi',
                                  &$this->fields['date']['value'],
                                  &$this->fields['time_in']['value'],
                                  &$this->fields['time_out']['value'],
                                  &$this->fields['hr_head']['value'],
-                                 &$this->fields['internship_id']['value'],
                                  &$this->fields['id']['value']);
 
             $this->stmt_prepare($bind_params);

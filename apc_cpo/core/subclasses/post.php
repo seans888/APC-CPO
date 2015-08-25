@@ -21,13 +21,12 @@ class post extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('INSERT');
-            $this->set_fields('id, title, author, date, body, attach_file, upload_file');
-            $this->set_values("?,?,?,?,?,?,?");
+            $this->set_fields('id, title, date, body, attach_file, upload_file');
+            $this->set_values("?,?,?,?,?,?");
 
-            $bind_params = array('issssss',
+            $bind_params = array('isssss',
                                  &$this->fields['id']['value'],
                                  &$this->fields['title']['value'],
-                                 &$this->fields['author']['value'],
                                  &$this->fields['date']['value'],
                                  &$this->fields['body']['value'],
                                  &$this->fields['attach_file']['value'],
@@ -47,12 +46,11 @@ class post extends data_abstraction
         if($this->stmt_template=='')
         {
             $this->set_query_type('UPDATE');
-            $this->set_update("title = ?, author = ?, date = ?, body = ?, attach_file = ?, upload_file = ?");
+            $this->set_update("title = ?, date = ?, body = ?, attach_file = ?, upload_file = ?");
             $this->set_where("id = ?");
 
-            $bind_params = array('ssssssi',
+            $bind_params = array('sssssi',
                                  &$this->fields['title']['value'],
-                                 &$this->fields['author']['value'],
                                  &$this->fields['date']['value'],
                                  &$this->fields['body']['value'],
                                  &$this->fields['attach_file']['value'],
