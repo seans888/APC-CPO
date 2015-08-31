@@ -237,7 +237,11 @@ class final_paper_hdr_dd
 
     static function load_relationships()
     {
-        $relations = array();
+        $relations = array(array('type'=>'1-M',
+                                 'table'=>'final_paper_dtl',
+                                 'link_parent'=>'id',
+                                 'link_child'=>'final_paper_hdr_id',
+                                 'where_clause'=>''));
 
         return $relations;
     }
