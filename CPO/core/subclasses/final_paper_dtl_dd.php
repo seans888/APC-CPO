@@ -45,7 +45,7 @@ class final_paper_dtl_dd
                                               'size'=>60,
                                               'upload_path'=>'',
                                               'drop_down_has_blank'=>TRUE,
-                                              'label'=>'Final Paper Hdr ID',
+                                              'label'=>'Final Paper Header ID',
                                               'extra'=>'',
                                               'companion'=>'',
                                               'in_listview'=>TRUE,
