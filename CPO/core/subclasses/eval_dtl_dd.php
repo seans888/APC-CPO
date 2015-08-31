@@ -68,7 +68,7 @@ class eval_dtl_dd
                                               'data_type'=>'integer',
                                               'length'=>11,
                                               'required'=>TRUE,
-                                              'attribute'=>'foreign key',
+                                              'attribute'=>'',
                                               'control_type'=>'textbox',
                                               'size'=>60,
                                               'upload_path'=>'',
@@ -153,13 +153,7 @@ class eval_dtl_dd
 
     static function load_relationships()
     {
-        $relations = array(array('type'=>'M-1',
-                                 'table'=>'eval_hdr',
-                                 'alias'=>'eval_hdr_id',
-                                 'link_parent'=>'id',
-                                 'link_child'=>'eval_hdr_id',
-                                 'minimum'=>1,
-                                 'where_clause'=>''));
+        $relations = array();
 
         return $relations;
     }

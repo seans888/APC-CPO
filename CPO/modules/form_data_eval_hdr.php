@@ -27,19 +27,3 @@ if($result = $dbh_eval_hdr->make_query()->result)
     $rcv_date_day = $data[2];
 }
 
-require_once 'subclasses/eval_dtl.php';
-$dbh_eval_hdr = new eval_dtl;
-$dbh_eval_hdr->set_fields('questionnaire_id, response_rating, response_detail');
-$dbh_eval_hdr->set_where("id='" . quote_smart($id) . "' AND eval_hdr_id='" . quote_smart($id) . "'");
-if($result = $dbh_eval_hdr->make_query()->result)
-{
-    $num_eval_dtl = $dbh_eval_hdr->num_rows;
-    for($a=0; $a<$num_eval_dtl; $a++)
-    {
-        $data = $result->fetch_row();
-        $cf_eval_dtl_questionnaire_id[$a] = $data[0];
-        $cf_eval_dtl_response_rating[$a] = $data[1];
-        $cf_eval_dtl_response_detail[$a] = $data[2];
-    }
-}
-

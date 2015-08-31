@@ -36,10 +36,6 @@ elseif(xsrf_guard())
 
         $dbh_eval_hdr->del($arr_form_data);
 
-        require_once 'subclasses/eval_dtl.php';
-        $dbh_eval_hdr = new eval_dtl;
-        $dbh_eval_hdr->del($arr_form_data);
-
 
         redirect("listview_eval_hdr.php?$query_string");
     }
