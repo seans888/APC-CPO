@@ -47,7 +47,22 @@ if(xsrf_guard())
         if($message=="")
         {
             $dbh_eval_hdr->add($arr_form_data);
-            
+            $id = $dbh_eval_hdr->auto_id;
+            require_once 'subclasses/eval_dtl.php';
+            $dbh_eval_hdr = new eval_dtl;
+            for($a=0; $a<$eval_dtl_count;$a++)
+            {
+                
+                $param = array(
+                               'id'=>$id,
+                               'questionnaire_id'=>$cf_eval_dtl_questionnaire_id[$a],
+                               'eval_hdr_id'=>$id,
+                               'response_rating'=>$cf_eval_dtl_response_rating[$a],
+                               'response_detail'=>$cf_eval_dtl_response_detail[$a]
+                              );
+                $dbh_eval_hdr->add($param);
+            }
+
 
             redirect("listview_eval_hdr.php?$query_string");
         }

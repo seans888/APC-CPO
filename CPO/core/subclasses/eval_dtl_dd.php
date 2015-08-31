@@ -40,7 +40,7 @@ class eval_dtl_dd
                                               'data_type'=>'integer',
                                               'length'=>11,
                                               'required'=>TRUE,
-                                              'attribute'=>'',
+                                              'attribute'=>'none',
                                               'control_type'=>'textbox',
                                               'size'=>60,
                                               'upload_path'=>'',
@@ -68,12 +68,12 @@ class eval_dtl_dd
                                               'data_type'=>'integer',
                                               'length'=>11,
                                               'required'=>TRUE,
-                                              'attribute'=>'none',
+                                              'attribute'=>'foreign key',
                                               'control_type'=>'textbox',
                                               'size'=>60,
                                               'upload_path'=>'',
                                               'drop_down_has_blank'=>TRUE,
-                                              'label'=>'Evaluation Header ID',
+                                              'label'=>'Eval Hdr ID',
                                               'extra'=>'',
                                               'companion'=>'',
                                               'in_listview'=>TRUE,
@@ -153,7 +153,13 @@ class eval_dtl_dd
 
     static function load_relationships()
     {
-        $relations = array();
+        $relations = array(array('type'=>'M-1',
+                                 'table'=>'eval_hdr',
+                                 'alias'=>'eval_hdr_id',
+                                 'link_parent'=>'id',
+                                 'link_child'=>'eval_hdr_id',
+                                 'minimum'=>1,
+                                 'where_clause'=>''));
 
         return $relations;
     }
