@@ -23,9 +23,9 @@ $view_link        = 'View post';
 
 //pages - set to empty if you don't want to include them in the listview
 $add_page         = 'add_post.php';
-$edit_page        = 'edit_post.php';
-$delete_page      = 'delete_post.php';
-$view_page        = 'detailview_post.php';
+$edit_page        = 'modules/edit_post.php';
+$delete_page      = 'modules/delete_post.php';
+$view_page        = 'modules/detailview_post.php';
 //$csv_page         = 'csv_post.php';
 //$report_page      = 'reporter_post.php';
 
