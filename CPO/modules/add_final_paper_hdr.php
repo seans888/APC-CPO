@@ -47,7 +47,21 @@ if(xsrf_guard())
         if($message=="")
         {
             $dbh_final_paper_hdr->add($arr_form_data);
-            
+            $id = $dbh_final_paper_hdr->auto_id;
+            require_once 'subclasses/final_paper_dtl.php';
+            $dbh_final_paper_hdr = new final_paper_dtl;
+            for($a=0; $a<$final_paper_dtl_count;$a++)
+            {
+                
+                $param = array(
+                               'id'=>$id,
+                               'final_paper_hdr_id'=>$id,
+                               'questionnaire_id'=>$cf_final_paper_dtl_questionnaire_id[$a],
+                               'response'=>$cf_final_paper_dtl_response[$a]
+                              );
+                $dbh_final_paper_hdr->add($param);
+            }
+
 
             redirect("listview_final_paper_hdr.php?$query_string");
         }
