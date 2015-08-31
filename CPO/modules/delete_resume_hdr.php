@@ -36,6 +36,10 @@ elseif(xsrf_guard())
 
         $dbh_resume_hdr->del($arr_form_data);
 
+        require_once 'subclasses/resume_dtl.php';
+        $dbh_resume_hdr = new resume_dtl;
+        $dbh_resume_hdr->del($arr_form_data);
+
 
         redirect("listview_resume_hdr.php?$query_string");
     }

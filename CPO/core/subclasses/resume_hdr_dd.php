@@ -181,7 +181,11 @@ class resume_hdr_dd
 
     static function load_relationships()
     {
-        $relations = array();
+        $relations = array(array('type'=>'1-M',
+                                 'table'=>'resume_dtl',
+                                 'link_parent'=>'id',
+                                 'link_child'=>'resume_hdr_id',
+                                 'where_clause'=>''));
 
         return $relations;
     }

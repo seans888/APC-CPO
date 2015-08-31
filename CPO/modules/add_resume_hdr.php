@@ -47,7 +47,21 @@ if(xsrf_guard())
         if($message=="")
         {
             $dbh_resume_hdr->add($arr_form_data);
-            
+            $id = $dbh_resume_hdr->auto_id;
+            require_once 'subclasses/resume_dtl.php';
+            $dbh_resume_hdr = new resume_dtl;
+            for($a=0; $a<$resume_dtl_count;$a++)
+            {
+                
+                $param = array(
+                               'id'=>$id,
+                               'response'=>$cf_resume_dtl_response[$a],
+                               'resume_hdr_id'=>$id,
+                               'questionnaire_id'=>$cf_resume_dtl_questionnaire_id[$a]
+                              );
+                $dbh_resume_hdr->add($param);
+            }
+
 
             redirect("listview_resume_hdr.php?$query_string");
         }
