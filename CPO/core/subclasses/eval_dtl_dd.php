@@ -7,6 +7,14 @@ class eval_dtl_dd
     static function load_dictionary()
     {
         $fields = array(
+		
+						'question' => array('value'=>'',
+											'length'=>0,
+											'control_type'=>'textbox',
+											'size'=>0,
+											'label'=>'Question',
+											'extra'=>'readonly'),
+						
                         'id' => array('value'=>'',
                                               'nullable'=>FALSE,
                                               'data_type'=>'integer',

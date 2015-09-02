@@ -48,13 +48,14 @@ if(xsrf_guard())
         {
             $dbh_eval_hdr->add($arr_form_data);
             $id = $dbh_eval_hdr->auto_id;
+			$idd = $dbh_eval_dtl->auto_id;
             require_once 'subclasses/eval_dtl.php';
             $dbh_eval_hdr = new eval_dtl;
             for($a=0; $a<$eval_dtl_count;$a++)
             {
                 
                 $param = array(
-                               'id'=>$id,
+                               'id'=> $idd,
                                'questionnaire_id'=>$cf_eval_dtl_questionnaire_id[$a],
                                'eval_hdr_id'=>$id,
                                'response_rating'=>$cf_eval_dtl_response_rating[$a],
@@ -72,6 +73,51 @@ require 'subclasses/eval_hdr_html.php';
 $html = new eval_hdr_html;
 $html->draw_header('Add Eval Hdr', $message, $message_type);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
+
+$username = "root";
+$password = "";
+$hostname = "localhost"; 
+
+//connection to the database
+$dbhandle = mysql_connect($hostname, $username, $password) 
+ or die("Unable to connect to MySQL");
+//echo "Connected to MySQL<br>";
+
+//select a database to work with
+$selected = mysql_select_db("apc-cpo",$dbhandle) 
+  or die("Could not select examples");
+
+//execute the SQL query and return records
+$result = mysql_query("SELECT count(question) as count FROM questionnaire WHERE type = 'Resume'");
+$questions = mysql_query("SELECT question,id FROM questionnaire WHERE type = 'Resume'");
+//fetch tha data from the database 
+while ($row = mysql_fetch_array($result)) {
+    $i= $row['count'];
+}
+
+while ($row = mysql_fetch_array($questions)) {
+    $z = $row['question'];
+	$r = $row['id'];
+	$m = $r - 1;
+	//echo '<!DOCTYPE html><meta charset="UTF-8"><html><body>';
+//	echo '<input type=text name="cf_eval_dtl_questionnaire[' . $r . ']" placeholder="' . $z . '" >';
+//	echo '<input type=hidden name="cf_eval_dtl_questionnaire_id[' . $m .']" value="' . $r . '">';
+	$cf_eval_dtl_question[$m] = $z;
+	$cf_eval_dtl_questionnaire_id[$m] = $r;
+	//echo '</body></html>';
+}
+
+
+//close the connection
+mysql_close($dbhandle);
+
+//echo $result;
+
+$eval_dtl_count = $i;
+$num_eval_dtl = $i;
+
+
+
 $html->draw_controls('add');
 
 $html->draw_footer();
