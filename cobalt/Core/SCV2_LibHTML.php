@@ -437,7 +437,7 @@ function drawFooter()
                 <tr><td align="right"> RAM usage: </td><td> &nbsp;' . number_format($ram_used,0,'.',',') .'KB </td></tr>
                 <tr><td align="right"> Allocated RAM: </td><td> &nbsp;' . number_format($max_ram_used,0,'.',',') .'KB </td></tr>
                 <tr><td colspan="2">
-                    &copy; 2014, JV Roig <br>
+                    &copy; 2011-2015, JV Roig <br>
                     <a class="footer" href="http://jvroig.com/main/cobalt" target="_blank"> Cobalt Homepage @ JVRoig.com</a>
                 </td></tr>
                 </table>

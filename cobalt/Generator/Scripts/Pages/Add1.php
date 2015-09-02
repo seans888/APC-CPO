@@ -16,8 +16,8 @@ for($a=0;$a<$field_count;$a++)
     {
         $field_name = $field[$a]['Field_Name'];
 
-        $Upload_Controls_Script .= "\r\n        \$file_upload_control_name = '$field_name';";
-        $Upload_Controls_Script .= "\r\n        require 'components/upload_generic.php';";
+        $Upload_Controls_Script .= "\r\n    \$file_upload_control_name = '$field_name';";
+        $Upload_Controls_Script .= "\r\n    require 'components/upload_generic.php';";
     }
 }
 
@@ -93,7 +93,7 @@ EOD;
                                          'Control_Type'=>array(),
                                          'Label'=>array());
 
-        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
+        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Auto_Increment, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
         if($result2 = $mysqli2->store_result())
         {
             $num_child_fields = $result2->num_rows;
@@ -105,9 +105,9 @@ EOD;
 
                 $Field_Var='';
 
-                if($Attribute=='primary key' && strtoupper($Field_Name) == 'AUTO_ID')
+                if($Attribute=='primary key' && $Auto_Increment == 'Y')
                 {
-                    //Do nothing... ignore all auto_id's.
+                    //Do nothing... ignore all auto_id's (i.e., auto increment primary keys)
                 }
                 else
                 {
@@ -301,14 +301,15 @@ if(xsrf_guard())
 
     if(\$_POST['btn_cancel'])
     {
-        log_action('Pressed cancel button', \$_SERVER['PHP_SELF']);
+        log_action('Pressed cancel button');
         redirect("$List_View_Page?\$query_string");
     }
+$Upload_Controls_Script
 
     if(\$_POST['btn_submit'])
     {
-        log_action('Pressed submit button', \$_SERVER['PHP_SELF']);
-$Upload_Controls_Script
+        log_action('Pressed submit button');
+
         \$message .= {$dbh_name}->sanitize(\$arr_form_data)->lst_error;
         extract(\$arr_form_data);
 

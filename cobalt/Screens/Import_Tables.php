@@ -303,16 +303,19 @@ if(xsrf_guard())
 
                             if($field_key=="PRI") $attribute = 'primary key';
                             else $attribute = '';
+
+                            $auto_increment = 'N';
                             if($field_extra == 'auto_increment')
                             {
                                 $control_type='none';
                                 $in_listview = 'no';
+                                $auto_increment = 'Y';
                             }
 
                             //Get new Field_ID
                             $Field_ID = get_token();
 
-                            $SCV2_con->real_query("INSERT INTO `table_fields`(Field_ID, Table_ID, Field_Name, Data_Type, Nullable, Length, Attribute, Control_Type, Label, In_Listview)
+                            $SCV2_con->real_query("INSERT INTO `table_fields`(Field_ID, Table_ID, Field_Name, Data_Type, Nullable, Length, Attribute, Auto_Increment, Control_Type, Label, In_Listview)
                                                                 VALUES('$Field_ID',
                                                                        '$Table_ID',
                                                                        '$field_name',
@@ -320,6 +323,7 @@ if(xsrf_guard())
                                                                        '$field_null',
                                                                        '$length',
                                                                        '$attribute',
+                                                                       '$auto_increment',
                                                                        '$control_type',
                                                                        '$label',
                                                                        '$in_listview')");

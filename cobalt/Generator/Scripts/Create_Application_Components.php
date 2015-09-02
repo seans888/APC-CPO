@@ -34,10 +34,11 @@ function createStdAppComponents($path_array)
         $db = $result->fetch_assoc();
     }
 
+    $project_name = addslashes($_SESSION['Project_Name']);
     //Step 5: Create the config file contents.
     $global_config_file =<<<EOD
 <?php
-define('GLOBAL_PROJECT_NAME', '$_SESSION[Project_Name]');
+define('GLOBAL_PROJECT_NAME', '$project_name');
 define('GLOBAL_SESSION_NAME', '$session_name');
 
 //Default database settings
@@ -57,10 +58,13 @@ define('TMP_DIRECTORY', '$full_path_to_webroot' . '/' . BASE_DIRECTORY . '/tmp')
 define('TMP_PDF_STORE', 'rpt_pdf_tmp');
 define('TMP_CSV_STORE', 'rpt_csv_tmp');
 
+//Security-related options
+define('DEBUG_MODE', TRUE);
+define('IP_CHANGE_DETECTION', TRUE);
+
 //Misc
 define('MULTI_BYTE_ENCODING', 'utf-8');
 define('TIMEZONE_SETTING', '$tz_detected');
-define('DEBUG_MODE', TRUE);
 define('LOG_SELECT_QUERIES', FALSE);
 define('LOG_MODULE_ACCESS', FALSE);
 define('MAX_PASSWORD_LENGTH', 200);
@@ -68,6 +72,7 @@ define('MAX_FORM_KEYS',10);
 define('LISTVIEW_RESULTS_PER_PAGE',50);
 define('FOOTER_RESOURCE_USAGE', FALSE);
 define('ENABLE_SIDEBAR', TRUE);
+define('CONTROL_CENTER_COLUMNS',3);
 EOD;
 
     //Step 5: Write the config file. We need the project core path for this.
@@ -106,8 +111,6 @@ $about_contents=<<<EODD
 require_once 'path.php';
 init_cobalt('ALLOW_ALL');
 
-if(!isset(\$_POST['form_key'])) log_action("Module Access", \$_SERVER['PHP_SELF']);
-
 \$html = new html;
 \$html->draw_header('About ' . GLOBAL_PROJECT_NAME, \$message, \$message_type);
 \$project_name = GLOBAL_PROJECT_NAME;
@@ -122,8 +125,8 @@ EOD;
 Cobalt is a web-based code generator and framework using PHP and Oracle Database created by JV Roig.
 It makes web-based systems maintainable, scalable, secure and efficient, and makes the life of developers a lot easier. <br><br>
 
-<a href="http://cobalt.jvroig.com/download.php" target="_blank">Download Cobalt</a> |
-<a href="http://cobalt.jvroig.com/faq.php" target="_blank">Cobalt FAQ</a>
+<a href="http://cobalt.jvroig.com/co/download/" target="_blank">Download Cobalt</a> |
+<a href="http://cobalt.jvroig.com/co/documentation/" target="_blank">Cobalt FAQ</a>
 EOD;
 \$html->display_message(\$msg);
 \$html->draw_footer();

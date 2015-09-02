@@ -59,9 +59,12 @@ for($a=0;$a<$field_count;$a++)
             $Date_Controls_Explode.=<<<EOD
 
     \$data = explode('-',\$$field_name);
-    \$$dc_year[$a] = \$data[0];
-    \$$dc_month[$a] = \$data[1];
-    \$$dc_day[$a] = \$data[2];
+    if(count(\$data) == 3)
+    {
+        \$$dc_year[$a] = \$data[0];
+        \$$dc_month[$a] = \$data[1];
+        \$$dc_day[$a] = \$data[2];
+    }
 EOD;
         }
     }
@@ -114,7 +117,7 @@ if($result = $mysqli->store_result())
         $Child_Table_Set_Fields='';
         $Child_Table_Fields_Assignment='';
 
-        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
+        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Auto_Increment, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
         if($result2 = $mysqli2->store_result())
         {
             $num_child_fields = $result2->num_rows;
@@ -126,7 +129,7 @@ if($result = $mysqli->store_result())
                 extract($data2);
 
                 $Field_Var = '';
-                if($Attribute=='primary key' && strtoupper($Field_Name) == 'AUTO_ID')
+                if($Attribute=='primary key' && $Auto_Increment == 'Y')
                 {
                     //Do nothing... ignore all auto_id's.
                 }
@@ -338,13 +341,14 @@ if($Get_Primary_Keys)
 $urldecode_script
     require 'form_data_$class_name.php';
 }
-elseif(xsrf_guard())
+
+if(xsrf_guard())
 {
     init_var(\$_POST['btn_back']);
 
     if(\$_POST['btn_back'])
     {
-        log_action('Pressed cancel button', \$_SERVER['PHP_SELF']);
+        log_action('Pressed cancel button');
         require 'components/query_string_standard.php';
         redirect("$List_View_Page?\$query_string");
     }

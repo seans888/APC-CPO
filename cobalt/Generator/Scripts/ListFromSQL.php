@@ -90,8 +90,8 @@ function list_from_SQL_settings($Field_ID)
 
     //Set the FROM clause (tables)
 
-    foreach($select_tables as $table)
     $select_query .= ' FROM ';
+    foreach($select_tables as $table)
     {
         $select_query .= "$table, ";
     }

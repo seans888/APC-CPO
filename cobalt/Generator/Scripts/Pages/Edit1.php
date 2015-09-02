@@ -104,9 +104,12 @@ for($a=0;$a<$field_count;$a++)
             $Date_Controls_Explode.=<<<EOD
 
     \$data = explode('-',\$$field_name);
-    \$$dc_year[$a] = \$data[0];
-    \$$dc_month[$a] = \$data[1];
-    \$$dc_day[$a] = \$data[2];
+    if(count(\$data) == 3)
+    {
+        \$$dc_year[$a] = \$data[0];
+        \$$dc_month[$a] = \$data[1];
+        \$$dc_day[$a] = \$data[2];
+    }
 EOD;
         }
         else
@@ -126,8 +129,8 @@ for($a=0;$a<$field_count;$a++)
     {
         $field_name = $field[$a]['Field_Name'];
 
-        $Upload_Controls_Script .= "\r\n        \$file_upload_control_name = '$field_name';";
-        $Upload_Controls_Script .= "\r\n        require 'components/upload_generic.php';";
+        $Upload_Controls_Script .= "\r\n    \$file_upload_control_name = '$field_name';";
+        $Upload_Controls_Script .= "\r\n    require 'components/upload_generic.php';";
     }
 }
 
@@ -168,7 +171,7 @@ if($result = $mysqli->store_result())
         $Child_Num_Particulars = 'num_' . $Child_Table_Name; //The specialized '$numParticulars' variable.
         $Child_Particulars_Count = $Child_Table_Name . '_count' ; //The specialized '$particularsCount' variable.
         $Child_Table_Add_Method = 'add';
-        $Child_Table_Del_Method = 'del';
+        $Child_Table_Del_Method = 'delete_many';
 
         //We need to see if the child field has any field designated as 'Date Controls', so we can assemble the date value for it.
         $Child_Date_Field_Assembly = '';
@@ -209,7 +212,7 @@ EOD;
         $Child_Table_Set_Fields='';
         $Child_Table_Fields_Assignment='';
 
-        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
+        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Auto_Increment, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
         if($result2 = $mysqli2->store_result())
         {
             $num_child_fields = $result2->num_rows;
@@ -221,7 +224,7 @@ EOD;
                 extract($data2);
 
                 $Field_Var = '';
-                if($Attribute=='primary key' && strtoupper($Field_Name) == 'AUTO_ID')
+                if($Attribute=='primary key' && $Auto_Increment == 'Y')
                 {
                     //Do nothing... ignore all auto_id's.
                 }
@@ -454,7 +457,8 @@ $urldecode_script
     require 'form_data_$class_name.php';
 $Orig_Primary_Keys
 }
-elseif(xsrf_guard())
+
+if(xsrf_guard())
 {
     init_var(\$_POST['btn_cancel']);
     init_var(\$_POST['btn_submit']);
@@ -469,14 +473,15 @@ $Hidden_Orig_Primary_Keys_Script
 
     if(\$_POST['btn_cancel'])
     {
-        log_action('Pressed cancel button', \$_SERVER['PHP_SELF']);
+        log_action('Pressed cancel button');
         redirect("$List_View_Page?\$query_string");
     }
+$Upload_Controls_Script
 
     if(\$_POST['btn_submit'])
     {
-        log_action('Pressed submit button', \$_SERVER['PHP_SELF']);
-$Upload_Controls_Script
+        log_action('Pressed submit button');
+
         \$message .= {$dbh_name}->sanitize(\$arr_form_data)->lst_error;
         extract(\$arr_form_data);
 

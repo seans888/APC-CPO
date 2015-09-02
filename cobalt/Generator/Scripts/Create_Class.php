@@ -47,7 +47,7 @@ function createClass($Table_ID, $subclass_path, $mysqli, $mysqli_2, $inner_db_ha
 
     // 1.2 - Query all field information.
     // 1.2.1 - Generic field information.
-    $mysqli->real_query("SELECT Field_ID, Table_ID, Field_Name, Data_Type, Nullable, Length, Attribute, Control_Type, Label, In_Listview
+    $mysqli->real_query("SELECT Field_ID, Table_ID, Field_Name, Data_Type, Nullable, Length, Attribute, Control_Type, Label, In_Listview, Auto_Increment
                             FROM table_fields
                             WHERE Table_ID='$Table_ID'
                         ");
@@ -64,6 +64,8 @@ function createClass($Table_ID, $subclass_path, $mysqli, $mysqli_2, $inner_db_ha
         {
             extract($row);
 
+            $Label = addslashes($Label);
+
             $rpt_in_report        = 'TRUE';
             $rpt_column_format    = 'normal';
             $rpt_column_alignment = 'left';
@@ -71,31 +73,31 @@ function createClass($Table_ID, $subclass_path, $mysqli, $mysqli_2, $inner_db_ha
 
             if($Data_Type == 'integer')
             {
-                $char_set_method = 'generate_num_set';
-                $extra_chars_allowed = '-';
-                $char_set_allow_space = 'FALSE';
+                $char_set_method         = 'generate_num_set';
+                $extra_chars_allowed     = '-';
+                $char_set_allow_space    = 'FALSE';
                 $field_data_type_array[] = 'i';
-                $rpt_column_format = 'number_format2';
-                $rpt_column_alignment = 'right';
-                $rpt_show_sum = 'TRUE';
+                $rpt_column_format       = 'number_format2';
+                $rpt_column_alignment    = 'right';
+                $rpt_show_sum            = 'TRUE';
             }
             elseif($Data_Type == 'double or float')
             {
-                $char_set_method = 'generate_num_set';
-                $extra_chars_allowed = '- , .';
-                $char_set_allow_space = 'FALSE';
+                $char_set_method         = 'generate_num_set';
+                $extra_chars_allowed     = '- , .';
+                $char_set_allow_space    = 'FALSE';
                 $field_data_type_array[] = 'd';
-                $rpt_column_format = 'number_format2';
-                $rpt_column_alignment = 'right';
-                $rpt_show_sum = 'TRUE';
+                $rpt_column_format       = 'number_format2';
+                $rpt_column_alignment    = 'right';
+                $rpt_show_sum            = 'TRUE';
             }
             else
             {
                 //Normal input field, defaults to no filter.
                 //This is fine since every data will be used in prepared statements or checked and escaped properly.
-                $char_set_method = '';
-                $extra_chars_allowed = '';
-                $char_set_allow_space = 'TRUE';
+                $char_set_method         = '';
+                $extra_chars_allowed     = '';
+                $char_set_allow_space    = 'TRUE';
                 $field_data_type_array[] = 's';
             }
 
@@ -103,9 +105,9 @@ function createClass($Table_ID, $subclass_path, $mysqli, $mysqli_2, $inner_db_ha
             //should be explicitly set to normal format (just in case their data type is int) and center alignment, and no sum.
             if(strpos($Label, 'ID') !== FALSE)
             {
-                $rpt_column_format = 'normal';
+                $rpt_show_sum         = 'FALSE';
+                $rpt_column_format    = 'normal';
                 $rpt_column_alignment = 'center';
-                $rpt_show_sum = 'FALSE';
             }
 
             $Required='TRUE';
@@ -133,6 +135,7 @@ function createClass($Table_ID, $subclass_path, $mysqli, $mysqli_2, $inner_db_ha
             $field_array[] = $Field_Name; //aggregate all field names into this array.
             $field_attribute_array[] = $Attribute;
             $field_control_array[] = $Control_Type;
+            $field_auto_increment_array[] = $Auto_Increment;
             $fields .= <<<EOD
 
                         '$Field_Name' => array('value'=>'',
@@ -335,6 +338,175 @@ EOD;
     else die($mysqli->error);
     $result->close();
 
+    //We also need to get the relationships of this table/class.
+    //    $relations = array('1'=>array('Type'=>'1-1',
+    //                                      'Table'=>'position',
+    //                                      'Link_parent'=>'position_id',
+    //                                      'Link_child'=>'position_id',
+    //                                      'Link_subtext'=>array('position'),
+    //                                      'Where_clause'=>''));
+    $rel_index=0; //array index of relationships, should persist up to the M-1 section.
+    $foreign_field = ''; //will hold the field name of the foreign_key field of the child ("M") in a 1-M relationship, if one exists for this table
+    $mysqli->real_query("SELECT a.`Relation_ID`, a.`Relation`, a.`Child_Field_ID`, a.`Child_Field_Subtext`,
+                                b.`Field_Name`
+                            FROM `table_relations` a, `table_fields` b
+                            WHERE (a.`Child_Field_ID` = b.`Field_ID` AND b.`Table_ID` = '$Table_ID' AND a.`Relation`='ONE-to-ONE') OR
+                                  (a.`Parent_Field_ID` = b.`Field_ID` AND b.`Table_ID` = '$Table_ID' AND a.`Relation`='ONE-to-MANY')");
+    if($result = $mysqli->store_result())
+    {
+        $relations = '$relations = array(';
+        $put_comma=FALSE;
+        for($a=1; $a<=$result->num_rows; $a++)
+        {
+            $rel_index += $a;
+            $data = $result->fetch_assoc();
+            extract($data);
+
+            $Link_child = $Field_Name;
+
+            if($Relation == 'ONE-to-ONE') $Relation = '1-1';
+            elseif($Relation == 'ONE-to-MANY') $Relation = '1-M';
+
+            if($Relation == '1-1')
+            {
+                $arrSubtext = explode(',', $Child_Field_Subtext);
+                $Child_Field_Subtext='';
+                foreach($arrSubtext as $subtext)
+                {
+                    $subtext = trim($subtext);
+                    if($Child_Field_Subtext != '') $Child_Field_Subtext .= ',';
+                    $Child_Field_Subtext .= "'$subtext'";
+                }
+            }
+
+            //Finally, get the involved table&field name
+            if($Relation == '1-1')
+            {
+                $mysqli_2->real_query("SELECT b.`Field_Name`, c.`Table_Name`
+                                            FROM `table_relations` a, `table_fields` b, `table` c
+                                            WHERE a.`Relation_ID` = '$Relation_ID' AND
+                                                  a.`Parent_Field_ID` = b.`Field_ID` AND
+                                                  b.`Table_ID` = c.`Table_ID`");
+            }
+            elseif($Relation == '1-M')
+            {
+                $mysqli_2->real_query("SELECT b.`Field_Name`, c.`Table_Name`
+                                            FROM `table_relations` a, `table_fields` b, `table` c
+                                            WHERE a.`Relation_ID` = '$Relation_ID' AND
+                                                  a.`Child_Field_ID` = b.`Field_ID` AND
+                                                  b.`Table_ID` = c.`Table_ID`");
+            }
+
+            if($result_2 = $mysqli_2->store_result())
+            {
+                $data = $result_2->fetch_row();
+                $Involved_Field = $data[0];
+                $Involved_Table = $data[1];
+                $result_2->close();
+            }
+            else
+            {
+                die($mysqli_2->error);
+            }
+
+            if($Involved_Field == $Link_child)
+            {
+                $Alias = '';
+            }
+            else
+            {
+                $Alias = $Link_child;
+            }
+
+            if($put_comma) $relations .= ",\n                           ";
+
+            if($Relation == '1-1')
+            {
+                $relations .= "array('type'=>'$Relation',
+                                 'table'=>'$Involved_Table',
+                                 'alias'=>'$Alias',
+                                 'link_parent'=>'$Involved_Field',
+                                 'link_child'=>'$Link_child',
+                                 'link_subtext'=>array($Child_Field_Subtext),
+                                 'where_clause'=>'')";
+            }
+            elseif($Relation == '1-M')
+            {
+                $relations .= "array('type'=>'$Relation',
+                                 'table'=>'$Involved_Table',
+                                 'link_parent'=>'$Link_child',
+                                 'link_child'=>'$Involved_Field',
+                                 'where_clause'=>'')";
+            }
+
+            $put_comma = TRUE;
+
+        }
+        $result->close();
+
+        //Section above retrieved relationships of parent; this one retrieves relationships of a child (the "M") in a 1-M relationship
+        $mysqli->real_query("SELECT a.`Relation_ID`, a.`Relation`, a.`Child_Field_ID`, a.`Child_Field_Subtext`,
+                                    b.`Field_Name`
+                                FROM `table_relations` a, `table_fields` b
+                                WHERE a.`Child_Field_ID` = b.`Field_ID` AND b.`Table_ID` = '$Table_ID' AND a.`Relation`='ONE-to-MANY'");
+        if($result = $mysqli->store_result())
+        {
+            for($a=1; $a<=$result->num_rows; $a++)
+            {
+                $rel_index += $a;
+                $data = $result->fetch_assoc();
+                extract($data);
+
+                $Link_child = $Field_Name;
+                //2014-12-03
+                //This will be used in PHASE 3, in case this Foreign Key connected to Parent is not defined as Primary Key.
+                $foreign_field = $Field_Name;
+
+                $mysqli_2->real_query("SELECT b.`Field_Name`, c.`Table_Name`
+                                            FROM `table_relations` a, `table_fields` b, `table` c
+                                            WHERE a.`Relation_ID` = '$Relation_ID' AND
+                                                  a.`Parent_Field_ID` = b.`Field_ID` AND
+                                                  b.`Table_ID` = c.`Table_ID`");
+
+                if($result_2 = $mysqli_2->store_result())
+                {
+                    $data = $result_2->fetch_row();
+                    $Involved_Field = $data[0];
+                    $Involved_Table = $data[1];
+                    $result_2->close();
+                }
+                else
+                {
+                    die($mysqli_2->error);
+                }
+
+                if($Involved_Field == $Link_child)
+                {
+                    $Alias = '';
+                }
+                else
+                {
+                    $Alias = $Link_child;
+                }
+
+                if($put_comma) $relations .= ",\n                           ";
+
+                $relations .= "array('type'=>'M-1',
+                                 'table'=>'$Involved_Table',
+                                 'alias'=>'$Alias',
+                                 'link_parent'=>'$Involved_Field',
+                                 'link_child'=>'$Link_child',
+                                 'minimum'=>1,
+                                 'where_clause'=>'')";
+
+                $put_comma = TRUE;
+            }
+        }
+
+        $relations .= ');';
+    }
+
+
     //PHASE 3: Creating the subclass methods.
     //Using the fields conveniently aggregated into $fields_array, we simply create a set of generic methods for this subclass,
     //namely Add, Edit, Delete, and Select queries.
@@ -351,6 +523,7 @@ EOD;
     $edit_primary_key_list='';          //We create a separate primary key list for the edit and delete queries because the edit query
     $delete_primary_key_list='';        //needs to make sure that editable primary key fields are compared with their original values.
     $reverse_edit_primary_key_list='';  //This one is identical to edit_primary_key_list, except that '=' is changed to '!=', and 'AND' is changed to 'OR', for uniqueness checking in edit scenarios
+    $delete_many_primary_key_list='';   //Similar to delete_primary_key_list, but for the delete_many method meant for deleting all child records of a parent record.
 
     $temp_auto_id_key='';               //To hold any auto_id keys. If the table has no other identifiers, this will be used. Otherwise, the value here will simply be discarded.
     $temp_parameterized_edit_field_list_for_keys='';
@@ -368,7 +541,9 @@ EOD;
     $parameterized_edit_field_list_for_keys='';  //Temp holder for parameterized edit field list derived from keys (where clause), because they should be appended at the end of $parameterized_edit_field_list
     $parameterized_edit_field_types_for_keys=''; //Temp holder for parameterized edit field types derived from keys (where clause), because they should be appended at the end of $parameterized_edit_field_types
     $parameterized_delete_field_list='';  //Same as parameterized_edit_field_list, but meant for delete method
-    $parameterized_delete_field_types=''; //type specifier (i,d,s,b) for the prepared statement in the del method.
+    $parameterized_delete_field_types=''; //type specifier (i,d,s,b) for the prepared statement in the delete method.
+    $parameterized_delete_many_field_list='';  //Same as parameterized_delete_field_list, but meant for delete_many method
+    $parameterized_delete_many_field_types=''; //type specifier (i,d,s,b) for the prepared statement in the delete_many method.
     $parameterized_uniqueness_field_list='';  //Same as parameterized_delete_field_list, but meant for check_uniqueness method
     $parameterized_uniqueness_field_types=''; //type specifier (i,d,s,b) for the prepared statement in the check_uniqueness method.
     $parameterized_uniqueness_edit_field_list=''; //Same as parameterized_edit_field_list, but meant for check_uniqueness_for_editing method.
@@ -400,6 +575,24 @@ EOD;
                 $parameterized_edit_field_list .= "\r\n" . "                                 " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
             }
             $parameterized_edit_field_types .= $field_data_type_array[$a];
+
+            if($field_attribute_array[$a] == "foreign key" && $field_array[$a] == $foreign_field)
+            {
+                //2014-12-03
+                //This branch was added to complement line 459-461 above (dated 2014-12-03), so that any foreign key from parent
+                //will be used in delete_many even if not defined as primary key
+                $delete_many_primary_key_list .= $field_array[$a] . " = ? AND ";
+                if($parameterized_delete_many_field_list == '')
+                {
+                    $parameterized_delete_many_field_list .= '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+                }
+                else
+                {
+                    $parameterized_delete_many_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+                }
+                $parameterized_delete_many_field_types .= $field_data_type_array[$a];
+            }
+
         }
         elseif(($field_attribute_array[$a] == "primary key" || $field_attribute_array[$a] == "primary&foreign key") && $field_control_array[$a] != 'none')
         {
@@ -440,19 +633,40 @@ EOD;
                 $parameterized_delete_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
             }
             $parameterized_delete_field_types .= $field_data_type_array[$a];
+
+            $delete_many_primary_key_list .= $field_array[$a] . " = ? AND ";
+            if($parameterized_delete_many_field_list == '')
+            {
+                $parameterized_delete_many_field_list .= '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+            }
+            else
+            {
+                $parameterized_delete_many_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+            }
+            $parameterized_delete_many_field_types .= $field_data_type_array[$a];
         }
         elseif(($field_attribute_array[$a] == "primary key" || $field_attribute_array[$a] == "primary&foreign key") && $field_control_array[$a] == 'none')
         {
-            if(strtoupper($field_array[$a]) == 'AUTO_ID')
+            if(strtoupper($field_auto_increment_array[$a]) == 'Y')
             {
-                $temp_auto_id_key .= $field_array[$a] . " = ? AND ";
-                $temp_parameterized_edit_field_list_for_keys .= "\r\n" . "                                 " . '&$this->fields[' . "'" .  "$field_array[$a]'" . '][\'value\'],';
-                $temp_parameterized_delete_field_list_for_keys .= '&$this->fields[' . "'" .  "$field_array[$a]'" . '][\'value\'],';
-                $temp_parameterized_edit_field_types_for_keys .= $field_data_type_array[$a];
+                $edit_primary_key_list .= $field_array[$a] . " = ? AND ";
+                $parameterized_edit_field_list_for_keys .= "\r\n" . "                                 " . '&$this->fields[' . "'" .  "$field_array[$a]'" . '][\'value\'],';
+                $parameterized_edit_field_types_for_keys .= $field_data_type_array[$a];
 
-                $temp_reverse_auto_id_key .= $field_array[$a] . " != ? OR ";
-                $temp_parameterized_uniqueness_edit_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
-                $temp_parameterized_uniqueness_edit_field_types .= $field_data_type_array[$a];
+                $reverse_edit_primary_key_list .= $field_array[$a] . " != ? OR ";
+                $parameterized_uniqueness_edit_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+                $parameterized_uniqueness_edit_field_types .= $field_data_type_array[$a];
+
+                $delete_primary_key_list .= $field_array[$a] . " = ? AND ";
+                if($parameterized_delete_field_list == '')
+                {
+                    $parameterized_delete_field_list .= '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+                }
+                else
+                {
+                    $parameterized_delete_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+                }
+                $parameterized_delete_field_types .= $field_data_type_array[$a];
             }
             else
             {
@@ -474,30 +688,20 @@ EOD;
                     $parameterized_delete_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
                 }
                 $parameterized_delete_field_types .= $field_data_type_array[$a];
+
+                $delete_many_primary_key_list .= $field_array[$a] . " = ? AND ";
+                if($parameterized_delete_many_field_list == '')
+                {
+                    $parameterized_delete_many_field_list .= '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+                }
+                else
+                {
+                    $parameterized_delete_many_field_list .= "\r\n" . "                             " . '&$this->fields[' . "'$field_array[$a]'" . '][\'value\'],';
+                }
+                $parameterized_delete_many_field_types .= $field_data_type_array[$a];
             }
         }
     }
-    //Check if we should use the values (if any) stored in the temp auto id vars.
-    //We only need to use them if the main vars are empty.
-    if($edit_primary_key_list == '')
-    {
-        $edit_primary_key_list = $temp_auto_id_key;
-        $parameterized_edit_field_list_for_keys  = $temp_parameterized_edit_field_list_for_keys;
-        $parameterized_edit_field_types_for_keys = $temp_parameterized_edit_field_types_for_keys;
-    }
-    if($delete_primary_key_list == '')
-    {
-        $delete_primary_key_list = $temp_auto_id_key;
-        $parameterized_delete_field_list = $temp_parameterized_delete_field_list_for_keys;
-        $parameterized_delete_field_types = $temp_parameterized_edit_field_types_for_keys;
-    }
-    if($reverse_edit_primary_key_list == '')
-    {
-        $reverse_edit_primary_key_list = $temp_reverse_auto_id_key;
-        $parameterized_uniqueness_edit_field_list  = $temp_parameterized_uniqueness_edit_field_list;
-        $parameterized_uniqueness_edit_field_types = $temp_parameterized_uniqueness_edit_field_types;
-    }
-
 
     $parameterized_edit_field_list .= $parameterized_edit_field_list_for_keys;
     $parameterized_edit_field_types.= $parameterized_edit_field_types_for_keys;
@@ -510,6 +714,7 @@ EOD;
     $value_list = substr($value_list,0, strlen($value_list)-1);
     $parameterized_field_list = substr($parameterized_field_list,0, strlen($parameterized_field_list)-1);
     $parameterized_delete_field_list = substr($parameterized_delete_field_list,0, strlen($parameterized_delete_field_list)-1);
+    $parameterized_delete_many_field_list = substr($parameterized_delete_many_field_list,0, strlen($parameterized_delete_many_field_list)-1);
     $parameterized_edit_field_list = substr($parameterized_edit_field_list,0, strlen($parameterized_edit_field_list)-1);
     $parameterized_uniqueness_field_list = substr($parameterized_uniqueness_field_list,0, strlen($parameterized_uniqueness_field_list)-1);
     $parameterized_uniqueness_edit_field_list = substr($parameterized_uniqueness_edit_field_list,0, strlen($parameterized_uniqueness_edit_field_list)-1);
@@ -523,6 +728,7 @@ EOD;
     $edit_primary_key_list = substr($edit_primary_key_list,0, strlen($edit_primary_key_list)-5);
     $reverse_edit_primary_key_list = substr($reverse_edit_primary_key_list,0, strlen($reverse_edit_primary_key_list)-4);
     $delete_primary_key_list = substr($delete_primary_key_list,0, strlen($delete_primary_key_list)-5);
+    $delete_many_primary_key_list = substr($delete_many_primary_key_list,0, strlen($delete_many_primary_key_list)-5);
 
     //For the methods that check the uniqueness of a new record being added or edited, they use similar
     //primary key lists to the edit and delete primary key lists.
@@ -534,6 +740,28 @@ EOD;
     $DD_classname = $Table_Name . '_dd';
 
     //END: Before writing to the file itself, aggregate all content into $subclass_content (data abstraction subclass)
+
+
+
+$delete_many_method = <<<EOD
+
+    function delete_many(\$param)
+    {
+        \$this->set_parameters(\$param);
+        \$this->set_query_type('DELETE');
+        \$this->set_where("$delete_many_primary_key_list");
+
+        \$bind_params = array('$parameterized_delete_many_field_types',
+                             $parameterized_delete_many_field_list);
+
+        \$this->stmt_prepare(\$bind_params);
+        \$this->stmt_execute();
+        \$this->stmt_close();
+
+        return \$this;
+    }
+
+EOD;
 
     $subclass_content = <<<EOD
 <?php
@@ -592,7 +820,7 @@ $database_connection_variables
         return \$this;
     }
 
-    function del(\$param)
+    function delete(\$param)
     {
         \$this->set_parameters(\$param);
         \$this->set_query_type('DELETE');
@@ -606,9 +834,8 @@ $database_connection_variables
         \$this->stmt_close();
 
         return \$this;
-
     }
-
+$delete_many_method
     function select()
     {
         \$this->set_query_type('SELECT');
@@ -743,8 +970,6 @@ EOD;
     chmod($filename_RPT, 0777);
 
 
-
-
     //*******************************************************
     //Define the data dictionary class before writing to file
 
@@ -752,170 +977,6 @@ EOD;
     //also be stored by the data dictionary class
     $HTML_subclass_file = $Table_Name_HTML . '.php';
     $Data_subclass_file = $Table_Name . '.php';
-
-    //We also need to get the relationships of this table/class.
-    //    $relations = array('1'=>array('Type'=>'1-1',
-    //                                      'Table'=>'position',
-    //                                      'Link_parent'=>'position_id',
-    //                                      'Link_child'=>'position_id',
-    //                                      'Link_subtext'=>array('position'),
-    //                                      'Where_clause'=>''));
-    $rel_index=0; //array index of relationships, should persist up to the M-1 section.
-    $mysqli->real_query("SELECT a.`Relation_ID`, a.`Relation`, a.`Child_Field_ID`, a.`Child_Field_Subtext`,
-                                b.`Field_Name`
-                            FROM `table_relations` a, `table_fields` b
-                            WHERE (a.`Child_Field_ID` = b.`Field_ID` AND b.`Table_ID` = '$Table_ID' AND a.`Relation`='ONE-to-ONE') OR
-                                  (a.`Parent_Field_ID` = b.`Field_ID` AND b.`Table_ID` = '$Table_ID' AND a.`Relation`='ONE-to-MANY')");
-    if($result = $mysqli->store_result())
-    {
-        $relations = '$relations = array(';
-        $put_comma=FALSE;
-        for($a=1; $a<=$result->num_rows; $a++)
-        {
-            $rel_index += $a;
-            $data = $result->fetch_assoc();
-            extract($data);
-
-            $Link_child = $Field_Name;
-
-            if($Relation == 'ONE-to-ONE') $Relation = '1-1';
-            elseif($Relation == 'ONE-to-MANY') $Relation = '1-M';
-
-            if($Relation == '1-1')
-            {
-                $arrSubtext = explode(',', $Child_Field_Subtext);
-                $Child_Field_Subtext='';
-                foreach($arrSubtext as $subtext)
-                {
-                    $subtext = trim($subtext);
-                    if($Child_Field_Subtext != '') $Child_Field_Subtext .= ',';
-                    $Child_Field_Subtext .= "'$subtext'";
-                }
-            }
-
-            //Finally, get the involved table&field name
-            if($Relation == '1-1')
-            {
-                $mysqli_2->real_query("SELECT b.`Field_Name`, c.`Table_Name`
-                                            FROM `table_relations` a, `table_fields` b, `table` c
-                                            WHERE a.`Relation_ID` = '$Relation_ID' AND
-                                                  a.`Parent_Field_ID` = b.`Field_ID` AND
-                                                  b.`Table_ID` = c.`Table_ID`");
-            }
-            elseif($Relation == '1-M')
-            {
-                $mysqli_2->real_query("SELECT b.`Field_Name`, c.`Table_Name`
-                                            FROM `table_relations` a, `table_fields` b, `table` c
-                                            WHERE a.`Relation_ID` = '$Relation_ID' AND
-                                                  a.`Child_Field_ID` = b.`Field_ID` AND
-                                                  b.`Table_ID` = c.`Table_ID`");
-            }
-
-            if($result_2 = $mysqli_2->store_result())
-            {
-                $data = $result_2->fetch_row();
-                $Involved_Field = $data[0];
-                $Involved_Table = $data[1];
-                $result_2->close();
-            }
-            else
-            {
-                die($mysqli_2->error);
-            }
-
-            if($Involved_Field == $Link_child)
-            {
-                $Alias = '';
-            }
-            else
-            {
-                $Alias = $Link_child;
-            }
-
-            if($put_comma) $relations .= ",\n                           ";
-
-            if($Relation == '1-1')
-            {
-                $relations .= "array('type'=>'$Relation',
-                                 'table'=>'$Involved_Table',
-                                 'alias'=>'$Alias',
-                                 'link_parent'=>'$Involved_Field',
-                                 'link_child'=>'$Link_child',
-                                 'link_subtext'=>array($Child_Field_Subtext),
-                                 'where_clause'=>'')";
-            }
-            elseif($Relation == '1-M')
-            {
-                $relations .= "array('type'=>'$Relation',
-                                 'table'=>'$Involved_Table',
-                                 'link_parent'=>'$Link_child',
-                                 'link_child'=>'$Involved_Field',
-                                 'where_clause'=>'')";
-            }
-
-            $put_comma = TRUE;
-
-        }
-        $result->close();
-
-        //Section above retrieved relationships of parent; this one retrieves relationships of a child (the "M") in a 1-M relationship
-        $mysqli->real_query("SELECT a.`Relation_ID`, a.`Relation`, a.`Child_Field_ID`, a.`Child_Field_Subtext`,
-                                    b.`Field_Name`
-                                FROM `table_relations` a, `table_fields` b
-                                WHERE a.`Child_Field_ID` = b.`Field_ID` AND b.`Table_ID` = '$Table_ID' AND a.`Relation`='ONE-to-MANY'");
-        if($result = $mysqli->store_result())
-        {
-            for($a=1; $a<=$result->num_rows; $a++)
-            {
-                $rel_index += $a;
-                $data = $result->fetch_assoc();
-                extract($data);
-
-                $Link_child = $Field_Name;
-
-                $mysqli_2->real_query("SELECT b.`Field_Name`, c.`Table_Name`
-                                            FROM `table_relations` a, `table_fields` b, `table` c
-                                            WHERE a.`Relation_ID` = '$Relation_ID' AND
-                                                  a.`Parent_Field_ID` = b.`Field_ID` AND
-                                                  b.`Table_ID` = c.`Table_ID`");
-
-                if($result_2 = $mysqli_2->store_result())
-                {
-                    $data = $result_2->fetch_row();
-                    $Involved_Field = $data[0];
-                    $Involved_Table = $data[1];
-                    $result_2->close();
-                }
-                else
-                {
-                    die($mysqli_2->error);
-                }
-
-                if($Involved_Field == $Link_child)
-                {
-                    $Alias = '';
-                }
-                else
-                {
-                    $Alias = $Link_child;
-                }
-
-                if($put_comma) $relations .= ",\n                           ";
-
-                $relations .= "array('type'=>'M-1',
-                                 'table'=>'$Involved_Table',
-                                 'alias'=>'$Alias',
-                                 'link_parent'=>'$Involved_Field',
-                                 'link_child'=>'$Link_child',
-                                 'minimum'=>1,
-                                 'where_clause'=>'')";
-
-                $put_comma = TRUE;
-            }
-        }
-
-        $relations .= ');';
-    }
 
     $Readable_Name = ucwords(str_replace('_', ' ', $Table_Name));
     $data_dictionary_class = <<<EOD

@@ -1,7 +1,7 @@
 <?php
 /*
  * SCV2_Lib.php
- * FRIDAY, November 24, 2006 
+ * FRIDAY, November 24, 2006
  * SCV2 library file containing common PHP scripts.
  * JV Roig
  */
@@ -23,10 +23,10 @@ function scriptCheckIfNull()
 		//followed by the value that was submitted for that field.
 		$key1 = $cntr;
 		$key2 = $cntr+1;
-		
+
 		$label = func_get_arg($key1); //This gets the label that was passed.
 		$value = func_get_arg($key2); //This gets the value that was passed.
-		
+
 		if(!is_Array($value))
 		{
 			if($value=="") $errMsg .= "No value detected: $label <BR>";
@@ -52,11 +52,11 @@ function scriptCheckIfUnique_del($select, $delete)
 }
 
 function scriptCheckIfUnique($select, $errMsg)
-{	
+{
 	$mysqli = connect_DB();
 	$message="";
 	$result = $mysqli->query($select);
-	$numrows=$result->num_rows;
+	$numrows= $result->num_rows;
 	if($numrows>0) $message = $errMsg;
 	return $message;
 }
