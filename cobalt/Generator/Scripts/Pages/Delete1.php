@@ -1,5 +1,5 @@
 <?php
-$del_method = 'del';
+$del_method = 'delete';
 $show_in_tasklist = 'No';
 $module_permission_count = 1;
 $page_title = ucwords($module_link_name);
@@ -70,9 +70,12 @@ for($a=0;$a<$field_count;$a++)
             $Date_Controls_Explode.=<<<EOD
 
     \$data = explode('-',\$$field_name);
-    \$$dc_year[$a] = \$data[0];
-    \$$dc_month[$a] = \$data[1];
-    \$$dc_day[$a] = \$data[2];
+    if(count(\$data) == 3)
+    {
+        \$$dc_year[$a] = \$data[0];
+        \$$dc_month[$a] = \$data[1];
+        \$$dc_day[$a] = \$data[2];
+    }
 EOD;
         }
     }
@@ -113,7 +116,7 @@ if($result = $mysqli->store_result())
         $Child_Table_ID = $data[1];
         $Child_Classfile = $Child_Table_Name . '.php';
         $Child_Num_Particulars = 'num_' . $Child_Table_Name; //The specialized '$numParticulars' variable.
-        $Child_Table_Del_Method = 'del';
+        $Child_Table_Del_Method = 'delete_many';
 
         //We need to create the script that instantiates the subclass and then calls the delete method.
         $Child_Table_Delete_Script.=<<<EOD
@@ -135,7 +138,7 @@ EOD;
         $Child_Table_Set_Fields='';
         $Child_Table_Fields_Assignment='';
 
-        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
+        $mysqli2->real_query("SELECT Field_ID AS 'Child_Field_ID', Field_Name, Attribute, Auto_Increment, Control_Type, Label FROM `table_fields` WHERE Table_ID='$Child_Table_ID'");
         if($result2 = $mysqli2->store_result())
         {
             $num_child_fields = $result2->num_rows;
@@ -147,7 +150,7 @@ EOD;
                 extract($data2);
 
                 $Field_Var = '';
-                if($Attribute=='primary key' && strtoupper($Field_Name) == 'AUTO_ID')
+                if($Attribute=='primary key' && $Auto_Increment == 'Y')
                 {
                     //Do nothing... ignore all auto_id's.
                 }
@@ -357,7 +360,8 @@ if($Get_Primary_Keys)
 $urldecode_script
     require_once 'form_data_$class_name.php';
 }
-elseif(xsrf_guard())
+
+if(xsrf_guard())
 {
     init_var(\$_POST['btn_cancel']);
     init_var(\$_POST['btn_delete']);
@@ -365,13 +369,13 @@ elseif(xsrf_guard())
 
     if(\$_POST['btn_cancel'])
     {
-        log_action('Pressed cancel button', \$_SERVER['PHP_SELF']);
+        log_action('Pressed cancel button');
         redirect("$List_View_Page?\$query_string");
     }
 
     elseif(\$_POST['btn_delete'])
     {
-        log_action('Pressed delete button', \$_SERVER['PHP_SELF']);
+        log_action('Pressed delete button');
         require_once 'subclasses/$class_file';
         {$dbh_name} = new $class_name;
 

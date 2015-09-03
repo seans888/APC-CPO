@@ -20,8 +20,10 @@
     border-bottom: none;
     border-left: none;
     border-right: none;
-    background-image: url('../images/head-banner.jpg');
-    background-repeat: repeat-x;
+    background-color: #0e90fe;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0e90fe), to(#0075b2));
+    background: -moz-linear-gradient(top, #0e90fe, #0075b2);
+    background: -o-linear-gradient(top, #0e90fe, #0075b2);
     height: 70px;
     font-size: 36px;
     font-weight: bold;
@@ -63,9 +65,7 @@
     font-weight: bold;
     color: #cccccc;
     text-shadow: 2px 2px 1px #000000;
-    background-color: #fff38d;
-    background-color: #00a257;
-    background-color: #0074b0;
+    background-color: #0075b2;
     -moz-box-shadow: 0px 0px 6px #666 inset;
     -webkit-box-shadow: 0px 0px 6px #666 inset;
     box-shadow: 0px 0px 6px #666 inset;
@@ -99,7 +99,7 @@
     -webkit-box-shadow: 0px 0px 6px #666 inset;
     box-shadow: 0px 0px 6px #666 inset;
     color: #000000;
-    background-color: #424242;
+    background-color: #7f7f7f;
     font-family: "Display Font";
     font-size: 14px;
     text-align: left;
@@ -224,7 +224,8 @@ a.linkCC:active {
 }
 
 body {
-    background-color: #666666;
+    background-color: #ffb638;
+    background-color: #ffb135;
     font-family: "Display Font";
     font-size: 14px;
     margin-right: 0px;
@@ -286,6 +287,15 @@ div.container_footer {
     width: 500px;
     margin: 0 auto;
 }
+div.container_footer fieldset {
+    padding: 10px;
+}
+
+div.container_footer fieldset table tr td {
+    padding-left: 5px;
+    padding-right: 5px;
+    line-height: 170%;
+}
 
 div.user_badge {
     position: absolute;
@@ -323,13 +333,13 @@ fieldset.top {
     border-radius: 6px 6px 0 0;
     -moz-border-radius: 6px 6px 0 0;
     -webkit-border-radius: 6px 6px 0 0;
-    padding: 10px;
+    padding: 20px;
     border: #aaa solid 1px;
     border-bottom: none;
-    background-color: #8fb3d4;
-    background: -webkit-gradient(linear, left top, left bottom, from(#8fb3d4), to(#6d91b2));
-    background: -moz-linear-gradient(top, #8fb3d4, #6d91b2);
-    background: -o-linear-gradient(top, #8fb3d4, #6d91b2);
+    background-color: #0e90fe;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0e90fe), to(#0075b2));
+    background: -moz-linear-gradient(top, #0e90fe, #0075b2);
+    background: -o-linear-gradient(top, #0e90fe, #0075b2);
     text-shadow: 1px 1px 3px #000;
     font-size: 18px;
     color: #ffffff;
@@ -656,10 +666,10 @@ p.detail_view {
 .listRowHead {
     font-weight: bold;
     text-align: center;
-    background-color: #8fb3d4;
-    background: -webkit-gradient(linear, left top, left bottom, from(#8fb3d4), to(#6d91b2));
-    background: -moz-linear-gradient(top, #8fb3d4, #6d91b2);
-    background: -o-linear-gradient(top, #8fb3d4, #6d91b2);
+    background-color: #0e90fe;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0e90fe), to(#0075b2));
+    background: -moz-linear-gradient(top, #0e90fe, #0075b2);
+    background: -o-linear-gradient(top, #0e90fe, #0075b2);
 }
 
 .listRowOdd {
@@ -812,6 +822,7 @@ textarea {
     padding:4px;
     margin:6px;
     font-family: "Input Font";
+    font-size: 14px;
 }
 
 textarea:focus{

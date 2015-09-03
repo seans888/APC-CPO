@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `table_fields` (
   `Nullable` varchar(255) NOT NULL,
   `Length` int(11) NOT NULL,
   `Attribute` varchar(255) NOT NULL,
+  `Auto_Increment` char(1) NOT NULL,
   `Control_Type` varchar(255) NOT NULL,
   `Label` varchar(255) NOT NULL,
   `In_Listview` varchar(255) NOT NULL,

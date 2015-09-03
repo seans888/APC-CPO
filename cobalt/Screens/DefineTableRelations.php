@@ -21,6 +21,15 @@ if(xsrf_guard())
                                     'Parent', $Parent_Field_ID,
                                     'Child', $Child_Field_ID);
 
+        //Check for duplicate
+        $errMsg .= scriptCheckIfUnique("SELECT Relation_ID
+                                        FROM table_relations
+                                        WHERE
+                                                `Relation` = '" . $Relation . "' AND
+                                                `Parent_Field_ID` = '" . $Parent_Field_ID . "' AND
+                                                `Child_Field_ID` = '" . $Child_Field_ID . "'",
+                                       "Cannot add relationship - this relationship already exists!<br />");
+
         if($Relation=="ONE-to-ONE")
         {
             $errMsg .= scriptCheckIfNull('Child Field Subtext', $Child_Field_Subtext);

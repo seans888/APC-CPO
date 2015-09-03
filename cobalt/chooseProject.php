@@ -166,7 +166,7 @@ function submit_enter(my_field,e)
         <tr>
             <td align=right> Description: </td>
             <?php init_var($Project_Description); ?>
-            <td><textarea name=Project_Description rows=5 cols=43><?php echo $Project_Description;?></textarea></td>
+            <td><textarea name="Project_Description" rows="5" cols="38"><?php echo $Project_Description;?></textarea></td>
         </tr>
         <tr>
             <td align=right> Base Directory: </td>

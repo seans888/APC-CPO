@@ -12,20 +12,20 @@ if(xsrf_guard())
 
     if(\$_POST['btn_cancel']) 
     {
-        log_action('Pressed cancel button', \$_SERVER['PHP_SELF']);
+        log_action('Pressed cancel button');
         redirect("$List_View_Page");
     }
 
     if(\$_POST['btn_submit'])
     {
-        log_action('Pressed submit button', \$_SERVER['PHP_SELF']);
+        log_action('Pressed submit button');
 
         require 'subclasses/$class_file';
         {$dbh_name} = new $class_name;
 
         if(\$message=="")
         {
-            log_action("Exported table data to CSV", \$_SERVER['PHP_SELF']);
+            log_action('Exported table data to CSV');
             \$timestamp = date('Y-m-d');
             \$token = generate_token(0,'fs');
             \$csv_name = \$token . \$_SESSION['user'] . '_{$class_name}_' . \$timestamp . '.csv';

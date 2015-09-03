@@ -5,7 +5,7 @@ init_SCV2();
 $export_status='';
 if(isset($_GET['First_Run']))
 {
-    $Export_Name = $_SESSION['Project_Name'] . '_' . date('Y-m-d_Gis');
+    $Export_Name = $_SESSION['Project_Name'] . '_' . date('Y-m-d_His');
     $export_status='first run';
 }
 
@@ -141,12 +141,12 @@ if(xsrf_guard())
                 //Table Fields
                 $file_contents='';
                 $stmt =  $mysqli->stmt_init();
-                if($stmt->prepare("SELECT a.Field_ID, a.Table_ID, a.`Field_Name`, a.`Data_Type`, a.`Nullable`, a.`Length`, a.`Attribute`, a.Control_Type, a.`Label`, a.In_Listview "
+                if($stmt->prepare("SELECT a.Field_ID, a.Table_ID, a.`Field_Name`, a.`Data_Type`, a.`Nullable`, a.`Length`, a.`Attribute`, a.Control_Type, a.`Label`, a.In_Listview, a.Auto_Increment "
                                  ."FROM `table_fields` a, `table` b WHERE a.Table_ID=b.Table_ID AND b.Project_ID=?"))
                 {
                     $stmt->bind_param('s', $_SESSION['Project_ID']);
                     $stmt->execute();
-                    $stmt->bind_result($f_id, $t_id, $f_name, $data_type, $null, $length, $attr, $c_type, $label, $in_lv);
+                    $stmt->bind_result($f_id, $t_id, $f_name, $data_type, $null, $length, $attr, $c_type, $label, $in_lv, $auto_inc);
                     while($stmt->fetch())
                     {
                         $f_id = $mysqli->real_escape_string($f_id);
@@ -159,12 +159,13 @@ if(xsrf_guard())
                         $c_type = $mysqli->real_escape_string($c_type);
                         $label = $mysqli->real_escape_string($label);
                         $in_lv = $mysqli->real_escape_string($in_lv);
+                        $auto_inc = $mysqli->real_escape_string($auto_inc);
 
                         $file_contents .= 'INSERT INTO `table_fields`'
-                                         .'(Field_ID, Table_ID, Field_Name, Data_Type, Nullable, Length, Attribute, Control_Type, Label, In_Listview) VALUES';
+                                         .'(Field_ID, Table_ID, Field_Name, Data_Type, Nullable, Length, Attribute, Control_Type, Label, In_Listview, Auto_Increment) VALUES';
                         $file_contents .= "('" . $f_id . "', '" . $t_id . "', '" . $f_name . "', '" . $data_type . "', "
                                          . "'" . $null . "', '" . $length . "', '" . $attr . "', '" . $c_type . "', "
-                                         . "'" . $label . "', '" . $in_lv . "');" . "\r\n";
+                                         . "'" . $label . "', '" . $in_lv . "', '" . $auto_inc . "');" . "\r\n";
                     }
                     $stmt->close();
                 }

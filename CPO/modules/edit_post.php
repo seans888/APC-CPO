@@ -37,6 +37,8 @@ elseif(xsrf_guard())
     {
         log_action('Pressed submit button', $_SERVER['PHP_SELF']);
 
+        $file_upload_control_name = 'attach_file';
+        require 'components/upload_generic.php';
         $message .= $dbh_post->sanitize($arr_form_data)->lst_error;
         extract($arr_form_data);
 
@@ -60,7 +62,7 @@ elseif(xsrf_guard())
 }
 require 'subclasses/post_html.php';
 $html = new post_html;
-$html->draw_header('Edit Post', $message, $message_type);
+$html->draw_header('Edit Post', $message, $message_type, TRUE, TRUE);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
 $html->draw_hidden('id');
 

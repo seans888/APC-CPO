@@ -703,16 +703,6 @@ function queryDeleteTableField($param, $mysqli='')
     }
     else die($stmt->error);
 
-    /*  Obsolete code. This table does not exist anymore.
-    $stmt = $mysqli->stmt_init();
-    if($stmt->prepare("DELETE FROM `table_fields_list_source_link` WHERE Field_ID=?"))
-    {
-        $stmt->bind_param("i", $Field_ID);
-        $stmt->execute();
-        $stmt->close();
-    }
-    else die($stmt->error);
-    */
     $stmt = $mysqli->stmt_init();
     if($stmt->prepare("DELETE FROM `table_fields_list_source_select` WHERE Field_ID=?"))
     {
