@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 03, 2015 at 06:26 AM
+-- Generation Time: Sep 03, 2015 at 06:56 AM
 -- Server version: 5.6.25
 -- PHP Version: 5.6.11
 
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `system_log` (
   `datetime` int(11) NOT NULL,
   `action` mediumtext NOT NULL,
   `module` varchar(255) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=251 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `system_log`
@@ -283,7 +283,58 @@ INSERT INTO `system_log` (`entry_id`, `ip_address`, `user`, `datetime`, `action`
 (196, '::1', 'root', 1441254072, 'Query executed: DELETE FROM user_passport WHERE username IN (''apcih'')', '/apc-io/sysadmin/role_permissions_cascade.php'),
 (197, '::1', 'root', 1441254072, 'Query executed: INSERT `user_passport` SELECT ''apcih'', `link_id` FROM user_role_links WHERE role_id=''3''', '/apc-io/sysadmin/role_permissions_cascade.php'),
 (198, '::1', 'root', 1441254076, 'Pressed cancel button', '/apc-io/sysadmin/role_permissions_cascade.php'),
-(199, '::1', 'root', 1441254181, 'Logged out', '/apc-io/end.php');
+(199, '::1', 'root', 1441254181, 'Logged out', '/apc-io/end.php'),
+(200, '::1', 'root', 1441254543, 'Logged in', '/apc-io/login.php'),
+(201, '::1', 'root', 1441255299, 'Logged out', '/apc-io/end.php'),
+(202, '::1', 'apcih', 1441255309, 'Logged in', '/apc-io/login.php'),
+(203, '::1', 'apcih', 1441255468, 'Pressed submit button', '/apc-io/modules/comment/add_comment.php'),
+(204, '::1', 'apcih', 1441255469, 'Query Executed: INSERT INTO comment(id, body, date, person_id, post_id) VALUES(?,?,?,?,?)\r\nArray\n(\n    [0] => issii\n    [1] => \n    [2] => jlfsjl\n    [3] => 2015-09-03\n    [4] => 1\n    [5] => 1\n)\n', '/apc-io/modules/comment/add_comment.php'),
+(205, '::1', 'root', 1441255764, 'Logged in', '/apc-io/login.php'),
+(206, '::1', 'root', 1441255836, 'Query executed: DELETE FROM user_role_links WHERE role_id=''3''', '/apc-io/sysadmin/role_permissions.php'),
+(207, '::1', 'root', 1441255836, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''35'')', '/apc-io/sysadmin/role_permissions.php'),
+(208, '::1', 'root', 1441255836, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''65'')', '/apc-io/sysadmin/role_permissions.php'),
+(209, '::1', 'root', 1441255836, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''69'')', '/apc-io/sysadmin/role_permissions.php'),
+(210, '::1', 'root', 1441255836, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''73'')', '/apc-io/sysadmin/role_permissions.php'),
+(211, '::1', 'root', 1441255836, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''77'')', '/apc-io/sysadmin/role_permissions.php'),
+(212, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''81'')', '/apc-io/sysadmin/role_permissions.php'),
+(213, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''105'')', '/apc-io/sysadmin/role_permissions.php'),
+(214, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''109'')', '/apc-io/sysadmin/role_permissions.php'),
+(215, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''113'')', '/apc-io/sysadmin/role_permissions.php'),
+(216, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''117'')', '/apc-io/sysadmin/role_permissions.php'),
+(217, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''63'')', '/apc-io/sysadmin/role_permissions.php'),
+(218, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''67'')', '/apc-io/sysadmin/role_permissions.php'),
+(219, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''71'')', '/apc-io/sysadmin/role_permissions.php'),
+(220, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''75'')', '/apc-io/sysadmin/role_permissions.php'),
+(221, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''79'')', '/apc-io/sysadmin/role_permissions.php'),
+(222, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''83'')', '/apc-io/sysadmin/role_permissions.php'),
+(223, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''72'')', '/apc-io/sysadmin/role_permissions.php'),
+(224, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''76'')', '/apc-io/sysadmin/role_permissions.php'),
+(225, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''80'')', '/apc-io/sysadmin/role_permissions.php'),
+(226, '::1', 'root', 1441255837, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''84'')', '/apc-io/sysadmin/role_permissions.php'),
+(227, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''108'')', '/apc-io/sysadmin/role_permissions.php'),
+(228, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''116'')', '/apc-io/sysadmin/role_permissions.php'),
+(229, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''66'')', '/apc-io/sysadmin/role_permissions.php'),
+(230, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''70'')', '/apc-io/sysadmin/role_permissions.php'),
+(231, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''74'')', '/apc-io/sysadmin/role_permissions.php'),
+(232, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''78'')', '/apc-io/sysadmin/role_permissions.php'),
+(233, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''82'')', '/apc-io/sysadmin/role_permissions.php'),
+(234, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''110'')', '/apc-io/sysadmin/role_permissions.php'),
+(235, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''114'')', '/apc-io/sysadmin/role_permissions.php'),
+(236, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''118'')', '/apc-io/sysadmin/role_permissions.php'),
+(237, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''91'')', '/apc-io/sysadmin/role_permissions.php'),
+(238, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''95'')', '/apc-io/sysadmin/role_permissions.php'),
+(239, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''99'')', '/apc-io/sysadmin/role_permissions.php'),
+(240, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''103'')', '/apc-io/sysadmin/role_permissions.php'),
+(241, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''107'')', '/apc-io/sysadmin/role_permissions.php'),
+(242, '::1', 'root', 1441255838, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''111'')', '/apc-io/sysadmin/role_permissions.php'),
+(243, '::1', 'root', 1441255839, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''115'')', '/apc-io/sysadmin/role_permissions.php'),
+(244, '::1', 'root', 1441255839, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''119'')', '/apc-io/sysadmin/role_permissions.php'),
+(245, '::1', 'root', 1441255839, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''123'')', '/apc-io/sysadmin/role_permissions.php'),
+(246, '::1', 'root', 1441255839, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''127'')', '/apc-io/sysadmin/role_permissions.php'),
+(247, '::1', 'root', 1441255839, 'Query executed: INSERT INTO user_role_links(role_id, link_id) VALUES(''3'', ''131'')', '/apc-io/sysadmin/role_permissions.php'),
+(248, '::1', 'root', 1441255858, 'Query executed: DELETE FROM user_passport WHERE username IN (''apcih'')', '/apc-io/sysadmin/role_permissions_cascade.php'),
+(249, '::1', 'root', 1441255858, 'Query executed: INSERT `user_passport` SELECT ''apcih'', `link_id` FROM user_role_links WHERE role_id=''3''', '/apc-io/sysadmin/role_permissions_cascade.php'),
+(250, '::1', 'root', 1441255859, 'Pressed cancel button', '/apc-io/sysadmin/role_permissions_cascade.php');
 
 -- --------------------------------------------------------
 
@@ -544,7 +595,6 @@ CREATE TABLE IF NOT EXISTS `user_passport` (
 
 INSERT INTO `user_passport` (`username`, `link_id`) VALUES
 ('apcih', 35),
-('apcih', 62),
 ('apcih', 63),
 ('apcih', 65),
 ('apcih', 66),
@@ -1019,7 +1069,6 @@ INSERT INTO `user_role_links` (`role_id`, `link_id`) VALUES
 (2, 31),
 (2, 32),
 (3, 35),
-(3, 62),
 (3, 63),
 (3, 65),
 (3, 66),
@@ -1168,7 +1217,7 @@ ALTER TABLE `person`
 -- AUTO_INCREMENT for table `system_log`
 --
 ALTER TABLE `system_log`
-  MODIFY `entry_id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=200;
+  MODIFY `entry_id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=251;
 --
 -- AUTO_INCREMENT for table `system_skins`
 --
