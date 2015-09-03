@@ -57,7 +57,8 @@ if(xsrf_guard())
 
             require_once 'subclasses/eval_dtl.php';
             $dbh_eval_hdr = new eval_dtl;
-            $dbh_eval_hdr->delete_many($arr_form_data);
+            //$dbh_eval_hdr->delete_many($arr_form_data);
+			$dbh_eval_hdr->delete_data($id);
 
             for($a=0; $a<$eval_dtl_count;$a++)
             {
@@ -81,6 +82,58 @@ $html = new eval_hdr_html;
 $html->draw_header('Edit Eval Hdr', $message, $message_type);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
 $html->draw_hidden('id');
+
+
+$username = "root";
+$password = "";
+$hostname = "localhost"; 
+
+//connection to the database
+$dbhandle = mysql_connect($hostname, $username, $password) 
+ or die("Unable to connect to MySQL");
+//echo "Connected to MySQL<br>";
+
+//select a database to work with
+$selected = mysql_select_db("apc-cpo",$dbhandle) 
+  or die("Could not select examples");
+
+//execute the SQL query and return records
+//$result = mysql_query("SELECT count(question) as count FROM questionnaire WHERE type = 'Resume'");
+$questions = mysql_query("SELECT question FROM questionnaire WHERE type = 'Midterm Evaluation'");
+//fetch tha data from the database 
+/*while ($row = mysql_fetch_array($result)) {
+    $i= $row['count'];
+}*/
+
+$n = -1;
+$m = -1;
+
+while ($row = mysql_fetch_array($questions)) {
+    $z = $row['question'];
+	//$r = $row['id'];
+	$n++;
+	$m++;
+	
+	
+//	echo '<!DOCTYPE html><meta charset="UTF-8"><html><body>';
+//	echo '<input type=text name="cf_eval_dtl_question[' . $n . ']" placeholder="' . $z . '" >';
+//	echo '<input type=hidden name="cf_eval_dtl_questionnaire_id[' . $m .']" value="' . $r . '">';
+	
+	
+	$cf_eval_dtl_question[$n] = $z;
+	
+//$cf_resume_dtl_questionnaire_id[$n] = $r;
+	//echo '</body></html>';
+}
+
+
+//close the connection
+mysql_close($dbhandle);
+
+//echo $result;
+
+//$resume_dtl_count = $i;
+//$num_resume_dtl = $i;
 
 $html->draw_controls('edit');
 
