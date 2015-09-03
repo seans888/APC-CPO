@@ -7,6 +7,7 @@ class eval_dtl_dd
     static function load_dictionary()
     {
         $fields = array(
+		
                         'id' => array('value'=>'',
                                               'nullable'=>FALSE,
                                               'data_type'=>'integer',
@@ -35,6 +36,9 @@ class eval_dtl_dd
                                               'rpt_column_format'=>'normal',
                                               'rpt_column_alignment'=>'center',
                                               'rpt_show_sum'=>FALSE),
+											  
+						
+											  
                         'questionnaire_id' => array('value'=>'',
                                               'nullable'=>FALSE,
                                               'data_type'=>'integer',
@@ -42,11 +46,11 @@ class eval_dtl_dd
                                               'required'=>TRUE,
                                               'attribute'=>'',
                                               'control_type'=>'textbox',
-                                              'size'=>60,
+                                              'size'=>3,
                                               'upload_path'=>'',
                                               'drop_down_has_blank'=>TRUE,
-                                              'label'=>'Questionnaire ID',
-                                              'extra'=>'',
+                                              'label'=>'No.',
+                                              'extra'=>'readonly',
                                               'companion'=>'',
                                               'in_listview'=>TRUE,
                                               'char_set_method'=>'generate_num_set',
@@ -63,6 +67,16 @@ class eval_dtl_dd
                                               'rpt_column_format'=>'normal',
                                               'rpt_column_alignment'=>'center',
                                               'rpt_show_sum'=>FALSE),
+											  
+						'question' => array('value'=>'',
+											  'length'=>0,
+											  'control_type'=>'textarea',
+											  'size'=>'40;5',
+											  'label'=>'Question',
+											  'extra'=>'readonly',
+											  'in_listview'=>FALSE,
+											  'rpt_in_report'=>FALSE),
+											  
                         'eval_hdr_id' => array('value'=>'',
                                               'nullable'=>FALSE,
                                               'data_type'=>'integer',

@@ -139,4 +139,18 @@ class final_paper_dtl extends data_abstraction
 
         return $this;
     }
+	
+	function delete_data($key){
+        $this->set_query_type('DELETE');
+        $this->set_where("final_paper_hdr_id = ?");
+
+        $bind_params = array('i',
+                             $key);
+
+        $this->stmt_prepare($bind_params);
+        $this->stmt_execute();
+        $this->stmt_close();
+
+        return $this;
+	}
 }

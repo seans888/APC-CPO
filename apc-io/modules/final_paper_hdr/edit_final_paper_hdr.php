@@ -57,7 +57,8 @@ if(xsrf_guard())
 
             require_once 'subclasses/final_paper_dtl.php';
             $dbh_final_paper_hdr = new final_paper_dtl;
-            $dbh_final_paper_hdr->delete_many($arr_form_data);
+            //$dbh_final_paper_hdr->delete_many($arr_form_data);
+			$dbh_final_paper_hdr->delete_data($id);
 
             for($a=0; $a<$final_paper_dtl_count;$a++)
             {
