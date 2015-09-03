@@ -28,6 +28,8 @@ if(xsrf_guard())
         redirect("listview_post.php?$query_string");
     }
 
+    $file_upload_control_name = 'attach_file';
+    require 'components/upload_generic.php';
 
     if($_POST['btn_submit'])
     {
@@ -56,7 +58,7 @@ if(xsrf_guard())
 }
 require 'subclasses/post_html.php';
 $html = new post_html;
-$html->draw_header('Add Post', $message, $message_type);
+$html->draw_header('Add Post', $message, $message_type, TRUE, TRUE);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
 $html->draw_controls('add');
 

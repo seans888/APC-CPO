@@ -57,8 +57,7 @@ if(xsrf_guard())
 
             require_once 'subclasses/eval_dtl.php';
             $dbh_eval_hdr = new eval_dtl;
-            //$dbh_eval_hdr->delete_many($arr_form_data);
-			$dbh_eval_hdr->delete_data($id);
+            $dbh_eval_hdr->delete_many($arr_form_data);
 
             for($a=0; $a<$eval_dtl_count;$a++)
             {

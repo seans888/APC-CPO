@@ -34,6 +34,8 @@ if(xsrf_guard())
         redirect("listview_final_paper_hdr.php?$query_string");
     }
 
+    $file_upload_control_name = 'attachment';
+    require 'components/upload_generic.php';
 
     if($_POST['btn_submit'])
     {
@@ -57,8 +59,7 @@ if(xsrf_guard())
 
             require_once 'subclasses/final_paper_dtl.php';
             $dbh_final_paper_hdr = new final_paper_dtl;
-            //$dbh_final_paper_hdr->delete_many($arr_form_data);
-			$dbh_final_paper_hdr->delete_data($id);
+            $dbh_final_paper_hdr->delete_many($arr_form_data);
 
             for($a=0; $a<$final_paper_dtl_count;$a++)
             {
@@ -78,7 +79,7 @@ if(xsrf_guard())
 }
 require 'subclasses/final_paper_hdr_html.php';
 $html = new final_paper_hdr_html;
-$html->draw_header('Edit Final Paper Hdr', $message, $message_type);
+$html->draw_header('Edit Final Paper Hdr', $message, $message_type, TRUE, TRUE);
 $html->draw_listview_referrer_info($filter_field_used, $filter_used, $page_from, $filter_sort_asc, $filter_sort_desc);
 $html->draw_hidden('id');
 
