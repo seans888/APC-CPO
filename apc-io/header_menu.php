@@ -1,5 +1,7 @@
 <div class="HeaderBanner">
-<?php echo GLOBAL_PROJECT_NAME;?><span>&nbsp;</span>
+<?php //echo GLOBAL_PROJECT_NAME;
+
+echo 'APC Internship Office Communication Site';?><span>&nbsp;</span>
 </div>
 <div class='HeaderMenu'>
     <table width="100%">

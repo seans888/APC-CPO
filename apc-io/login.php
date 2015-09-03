@@ -129,7 +129,10 @@ echo '<input type="hidden" name="form_key" value="' . $form_key .'">';
 <div class="left_container">
 
     <div class="title">
-        <?php echo GLOBAL_PROJECT_NAME;?>
+        <?php //echo GLOBAL_PROJECT_NAME;
+		echo 'Asia Pacific College </br>';
+		echo 'Internship Office </br>';
+		echo 'Communication Site';?>
     </div>
 
     <div class="flavor_text">
@@ -145,7 +148,7 @@ echo '<input type="hidden" name="form_key" value="' . $form_key .'">';
         <table border="0" width="100%" cellspacing="1">
         <tr>
             <td align="center">
-                <img src="images/login_badge.png">
+                <img src="images/apclogo.png">
             </td>
         </tr>
         <tr>
