@@ -134,6 +134,8 @@ mysql_close($dbhandle);
 
 //$resume_dtl_count = $i;
 //$num_resume_dtl = $i;
+$cf_final_paper_dtl_question[0] = 'Internship Experience
+(Give your general evaluation of your Intern1 experience – tasks and projects done, the people you worked with, and memorable experiences.)';
 
 
 $html->draw_controls('edit');

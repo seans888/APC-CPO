@@ -124,7 +124,7 @@ mysql_close($dbhandle);
 $eval_dtl_count = $i;
 $num_eval_dtl = $i;
 
-//$cf_eval_dtl_question[0] = 'HI';
+$cf_eval_dtl_question[19] = 'The trainee possesses the needed technical skills to efficiently and effectively perform their tasks in the following specific areas: (Pls. enumerate here the task items as purported in the Intern’s Job Description.)';
 
 $html->draw_controls('add');
 

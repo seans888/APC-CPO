@@ -88,8 +88,8 @@ $selected = mysql_select_db("apc-cpo",$dbhandle)
   or die("Could not select examples");
 
 //execute the SQL query and return records
-$result = mysql_query("SELECT count(question) as count FROM questionnaire WHERE type = 'INTERN2 Final Paper'");
-$questions = mysql_query("SELECT question, id FROM questionnaire WHERE type = 'INTERN2 Final Paper'");
+$result = mysql_query("SELECT count(question) as count FROM questionnaire WHERE type = 'INTERN1 Final Paper'");
+$questions = mysql_query("SELECT question, id FROM questionnaire WHERE type = 'INTERN1 Final Paper'");
 //fetch tha data from the database 
 while ($row = mysql_fetch_array($result)) {
     $i= $row['count'];
@@ -125,6 +125,8 @@ mysql_close($dbhandle);
 $final_paper_dtl_count = $i;
 $num_final_paper_dtl = $i;
 
+$cf_final_paper_dtl_question[0] = 'Internship Experience
+(Give your general evaluation of your Intern1 experience – tasks and projects done, the people you worked with, and memorable experiences.)';
 
 $html->draw_controls('add');
 

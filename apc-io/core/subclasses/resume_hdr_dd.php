@@ -152,7 +152,7 @@ class resume_hdr_dd
                                               'data_type'=>'varchar',
                                               'length'=>255,
                                               'required'=>TRUE,
-                                              'attribute'=>'',
+                                              'attribute'=>'none',
                                               'control_type'=>'textbox',
                                               'size'=>60,
                                               'upload_path'=>'',

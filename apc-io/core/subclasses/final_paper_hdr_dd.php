@@ -67,7 +67,7 @@ class final_paper_hdr_dd
                                               'nullable'=>TRUE,
                                               'data_type'=>'varchar',
                                               'length'=>255,
-                                              'required'=>TRUE,
+                                              'required'=>FALSE,
                                               'attribute'=>'none',
                                               'control_type'=>'upload',
                                               'size'=>0,
