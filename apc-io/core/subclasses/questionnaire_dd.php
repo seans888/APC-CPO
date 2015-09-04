@@ -88,13 +88,13 @@ class questionnaire_dd
                                               'list_type'=>'sql generated',
                                               'list_settings'=>array('query' => "SELEC FRO",
                                                                      'list_value' => '',
-                                                                     'list_items' => arra),
+                                                                     'list_items' => 'arra',
                                                                      'list_separators' => array()),
                                               'rpt_in_report'=>TRUE,
                                               'rpt_column_format'=>'normal',
                                               'rpt_column_alignment'=>'left',
                                               'rpt_show_sum'=>FALSE)
-                       );
+                      ) ;
         return $fields;
     }
 
